@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="73px" height="31px" viewBox="0 0 73 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-4.25484518e-05%" y1="50.0000854%" x2="100.000001%" y2="50.0000854%" id="linearGradient-1">
+            <stop stop-color="#620B0E" offset="0%"></stop>
+            <stop stop-color="#BC1F2D" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="3.12569114e-05%" y1="49.99987%" x2="100.000079%" y2="49.99987%" id="linearGradient-2">
+            <stop stop-color="#ED3F2F" offset="0%"></stop>
+            <stop stop-color="#83151A" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Home" transform="translate(-120.000000, -50.000000)">
+            <g id="header" transform="translate(120.000000, 50.000000)">
+                <g id="white">
+                    <g id="logo">
+                        <g id="Group">
+                            <path d="M57.8545463,0 C56.3750455,7.60725666 50.7469119,14.327364 36.1962399,14.327364 C21.6608812,14.327364 16.3226173,6.73526833 14.8431165,0 L0,0 C0.594781689,17.5446243 10.6792381,31 35.9065057,31 C61.4235075,31 72.4051506,17.2590374 73,0 L57.8545463,0 Z" id="Fill-2" fill="url(#linearGradient-1)"></path>
+                            <path d="M14.7760092,0 L0,0 C0.591820108,17.5448511 11.2201646,31 36.3331949,31 C40.8569021,31 47.1264585,30.2309893 51,28.9511082 C19.5039598,28.9511082 14.7760092,0 14.7760092,0" id="Fill-5" fill="#000000"></path>
+                            <path d="M0,0 C0.589516827,17.5447843 10.873609,31 35.8889029,31 C40.3950045,31 44.384691,30.5830351 48,29.7690753 C16.6266052,29.7690753 15.0025784,0 15.0025784,0 L0,0 Z" id="Fill-7" fill="url(#linearGradient-2)"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

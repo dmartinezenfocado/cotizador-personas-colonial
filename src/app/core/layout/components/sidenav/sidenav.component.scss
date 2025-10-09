@@ -1,0 +1,29 @@
+.border-danger{
+    border-color:rgb(154 1 19) !important;
+  }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.sidenav-horizontal {
+  background-color: var(--bs-light-rgb);
+  width: 100%;                
+  border-bottom: 1px solid #dee2e6; 
+  position: relative;            
+  z-index: 2;                    
+  gap: 2rem;                     
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+
+  a {
+    flex-direction: row;         
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+  }
+}

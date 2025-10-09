@@ -1,0 +1,1 @@
+export const policyMask = '0-0-000-0000000'

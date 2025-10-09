@@ -1,0 +1,20 @@
+<main
+  class="main-content-app asidebarNav-colapse bottom-0 top-0"
+>
+  <div class="main-content position-fixed z-2" style="background-color: var(--bs-tertiary-bg); ">
+    <app-header (openMobileNav)="handleOpenMobileNav()"></app-header>
+
+    <div
+      class="main-section overflow-auto position-absolute  top: 0; left: 0; right: 0; z-3 overflow-x-hidden"
+      style="background-color: var(--bs-tertiary-bg); padding-top: 10px;"
+    >
+      <div class="container-fluid pt-2 pt-md-5 px-2 px-md-4">
+        <router-outlet></router-outlet>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+    <aside class="main-nav position-fixed z-3">
+      <app-sidenav></app-sidenav>
+    </aside>
+</main>

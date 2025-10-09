@@ -1,0 +1,42 @@
+button, button.d-flex, .noPrint{
+  display: none !important;
+}
+
+.print_bold{
+  font-weight: bold !important;
+}
+
+.modal > *{
+  margin: 0 !important;
+}
+
+.modal-dialog-centered{
+  align-items: start !important;
+}
+
+body, .modal-content{
+  width: 420px !important;
+  height: auto !important;
+}
+
+.modal-body{
+  flex: none !important;
+}
+
+@media print{
+  @page{
+    margin: 0;
+  }
+}
+
+.display-5{
+  font-weight: bold !important
+}
+
+.modal-body *, .order_id{
+  font-size: 1.1em;
+}
+
+.order_id{
+  font-weight: bold;
+}

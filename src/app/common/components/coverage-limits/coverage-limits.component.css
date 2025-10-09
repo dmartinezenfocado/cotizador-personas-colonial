@@ -1,0 +1,118 @@
+
+.section-title {
+  background: #e6e6e6;
+  color: #6d0f0f;              
+  font-weight: 700;
+  padding: .4rem .75rem;
+  border-radius: 4px;
+}
+
+/* “Tabla” con dos columnas */
+.table-like {
+  .thead {
+    display: grid;
+    grid-template-columns: 1fr auto; 
+    /* background: #cfcfcf; */
+    border-radius: 2px;
+  }
+
+  .th {
+    font-weight: 700;
+    color: #6d0f0f;
+    padding: .35rem .75rem;
+  }
+
+  .th-cob {
+    text-align: left;
+  }
+
+  .th-montos {
+    text-align: right;              /* Alinea el texto hacia las celdas */
+    padding-right: 2.5rem;          /* 🔹 Ajuste fino para alinear el header con los montos */
+  }
+
+  .tbody {
+    display: grid;
+    grid-auto-rows: auto;
+  }
+
+  .tr {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Misma estructura que el encabezado */
+    align-items: center;
+    gap: .5rem 1rem;
+    padding: .35rem .5rem;
+  }
+
+  .td-cob {
+    padding-left: .25rem;
+  }
+
+  .td-montos {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+
+/* Grid de 3 celdas punteadas para montos */
+.montos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: .35rem;
+  max-width: 520px;
+}
+
+.monto-celda {
+  padding: .45rem .75rem;
+  text-align: right;
+  border: 1px dotted #8b8b8b;   /* borde punteado como la imagen */
+  border-radius: 2px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: 500;
+}
+
+.monto-celda.disabled {
+  opacity: .35;             
+}
+
+/* Input para coberturas “free” */
+.free-input {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  max-width: 260px;
+
+  .form-control {
+    height: 36px;
+    text-align: right;
+  }
+
+  .suffix {
+    font-weight: 600;
+    color: #555;
+    min-width: 48px;
+    text-align: left;
+  }
+}
+
+/* Ajustes visuales */
+.form-check-input {
+  width: 1rem;
+  height: 1rem;
+}
+
+@media (max-width: 768px) {
+  .montos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .table-like .tr {
+    grid-template-columns: 1fr;
+  }
+  .td-montos {
+    justify-content: flex-start;
+  }
+}

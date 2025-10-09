@@ -1,0 +1,80 @@
+<div [formGroup]="form">
+  <h5 class="fw-bold border-bottom pb-2 mb-3">Datos Generales</h5>
+
+  <div class="row g-3">
+    <!-- Cliente -->
+    <div class="col-md-6">
+      <label class="form-label" for="clientName">Cliente</label>
+      <select id="clientName" class="form-select" formControlName="clientName"
+              [class.is-invalid]="(submitted || f['clientName']?.touched) && f['clientName']?.invalid"
+              aria-describedby="clientHelp">
+        <option value="">Seleccione un cliente</option>
+        <option value="miguel">Miguel Acosta</option>
+        <option value="juan">Juan Pérez</option>
+        <option value="ana">Ana Rodríguez</option>
+      </select>
+    </div>
+
+    <!-- Intermediario -->
+    <div class="col-md-6">
+      <label class="form-label" for="intermediario">Intermediario</label>
+      <select id="intermediario" class="form-select" formControlName="intermediario"
+              [class.is-invalid]="(submitted || f['intermediario']?.touched) && f['intermediario']?.invalid">
+        <option value="">Seleccione un intermediario</option>
+        <option value="directo">Negocio Directo</option>
+        <option value="broker1">Broker A</option>
+        <option value="broker2">Broker B</option>
+      </select>
+    </div>
+
+    <!-- Moneda -->
+    <div class="col-md-6">
+      <label class="form-label" for="moneda">Moneda</label>
+      <select id="moneda" class="form-select" formControlName="moneda"
+              [class.is-invalid]="(submitted || f['moneda']?.touched) && f['moneda']?.invalid">
+        <option value="">Seleccione la moneda</option>
+        <option value="dop">DOP</option>
+        <option value="usd">USD</option>
+      </select>
+    </div>
+
+    <!-- Forma de pago -->
+    <div class="col-md-6">
+      <label class="form-label" for="formaPago">Forma de Pago</label>
+      <select id="formaPago" class="form-select" formControlName="formaPago"
+              [class.is-invalid]="(submitted || f['formaPago']?.touched) && f['formaPago']?.invalid">
+        <option value="">Seleccione la forma de pago</option>
+        <option value="anual">Anual</option>
+        <option value="mensual">Mensual</option>
+        <option value="trimestral">Trimestral</option>
+      </select>
+    </div>
+
+    <!-- Cédula -->
+    <div class="col-md-6">
+      <label class="form-label" for="cedula">No. Cédula</label>
+      <input id="cedula" class="form-control" formControlName="cedula" type="text" placeholder="000-0000000-0"
+             [class.is-invalid]="(submitted || f['cedula']?.touched) && f['cedula']?.invalid" />
+    </div>
+
+    <!-- Fecha -->
+    <div class="col-md-6">
+      <label class="form-label" for="fecha">Fecha</label>
+      <input id="fecha" class="form-control" formControlName="fecha" type="date"
+             [class.is-invalid]="(submitted || f['fecha']?.touched) && f['fecha']?.invalid" />
+    </div>
+
+    <!-- Fecha de nacimiento -->
+    <div class="col-md-6">
+      <label class="form-label" for="fechaNacimiento">Fecha de Nacimiento</label>
+      <input id="fechaNacimiento" class="form-control" formControlName="fechaNacimiento" type="date"
+             [class.is-invalid]="(submitted || f['fechaNacimiento']?.touched) && f['fechaNacimiento']?.invalid" />
+    </div>
+
+    <!-- Edad -->
+    <div class="col-md-6">
+      <label class="form-label" for="edad">Edad</label>
+      <input id="edad" class="form-control" formControlName="edad" type="number" min="0" readonly />
+    </div>
+  </div>
+</div>

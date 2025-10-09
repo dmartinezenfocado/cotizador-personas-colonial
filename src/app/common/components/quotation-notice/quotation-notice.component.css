@@ -1,0 +1,17 @@
+.quotation-notice {
+  background-color: #ffffff;     
+  font-family: Arial, sans-serif;
+  font-size: 14px;               
+  color: #333333;                
+  line-height: 1.6;
+  text-align: justify;            
+  margin-top: 2rem;               
+  margin-left: 1rem;            
+  margin-bottom: 1.5rem;        
+  padding-right: 1rem;           
+  border: none;                  
+}
+
+.quotation-notice p {
+  margin-bottom: 0.75rem;
+}

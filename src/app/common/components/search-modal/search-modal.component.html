@@ -1,0 +1,42 @@
+@if (visible) {
+  <div class="modal-backdrop fade show" style="background-color: rgba(0, 0, 0, 0.2);"></div>
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+      <div class="modal-dialog modal-dialog-centered modal-lg modal-fixed-width">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ titulo }}</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="cerrar.emit()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <input [(ngModel)]="parametro" type="text" class="form-control" placeholder="Parámetro de búsqueda">
+              <button class="btn btn-primary" type="button">Buscar</button>
+            </div>
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr>
+                  @for (col of columnas; track col) {
+                    <th>{{ col.titulo }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of resultadosFiltrados; track item) {
+                  <tr (click)="onSeleccionar(item)" style="cursor: pointer;">
+                    @for (col of columnas; track col) {
+                      <td>{{ item[col.campo] }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+            @if (resultadosFiltrados.length === 0) {
+              <p class="text-center text-muted">No se encontraron resultados.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,152 @@
+/* You can add global styles to this file, and also import other style files */
+.form-control.ng-select {
+  height: 100%;
+}
+
+.form-control.ng-select .ng-select-container {
+  border: 0;
+}
+
+.main-content-app {
+  display: flex;
+}
+
+.main-content-app .main-content {
+  width: calc(100% - 250px);
+  align-items: end;
+  left: 250px;
+  position: relative;
+}
+
+.main-content-app.asidebarNav-colapse .main-nav .asidebarNav {
+  width: 90px;
+}
+
+
+.main-content-app.asidebarNav-colapse .main-nav .asidebarNav .colapse-off {
+  display: none;
+}
+
+.main-content-app.asidebarNav-colapse .main-content {
+  width: calc(100% - 90px);
+  left: 90px;
+}
+@media (width <= 767px) {
+  .main-content-app.asidebarNav-colapse:not(.showMobileNav) .main-content {
+    align-items: start;
+    width: 100%;
+    left: 0;
+  }
+  .main-content-app.asidebarNav-colapse:not(.showMobileNav) .main-nav {
+    left: -90px;
+  }
+}
+.main-section {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 68px;
+  height: calc(100vh - 68px);
+  width: 100%;
+}
+.material-symbols-outlined {
+  overflow: hidden;
+  text-align: center;
+  font-size: 26px;
+}
+
+.main-content-app .main-nav .asidebarNav {
+  height: 100vh;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  width: 250px;
+  background-color: #F0F2F4;
+}
+
+.main-content-app .main-nav .asidebarNav .text-primary {
+  /* color: #443AE3 !important; */
+}
+
+.main-content-app .main-nav .asidebarNav .nav {
+  height: 100%;
+  flex-wrap: nowrap;
+  background-color: #F0F2F4;
+}
+
+.main-content-app .main-nav .asidebarNav .nav button {
+  cursor: pointer;
+}
+
+.main-content-app .main-nav .asidebarNav .nav button small {
+  font-size: .75rem;
+}
+
+.main-content-app .main-nav .asidebarNav .navChild {
+  width: 260px;
+  left: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+
+.main-content-app .main-nav .asidebarNav .navChild .navChildTitle {
+  line-height: 30px;
+}
+
+.recientsaleTemplate aside {
+  width: 320px;
+  overflow: auto;
+  padding-left: 0.8rem !important;
+  padding-right: 0.8rem !important;
+  background-color: #f1f1f1;
+  height: calc(100vh - 1rem) !important;
+}
+
+.recientsaleTemplate .page-header-row {
+  top: 0;
+  z-index: 2;
+  background-color: #f1f1f1;
+}
+
+.item-card-sale .card figure {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  overflow: hidden;
+}
+
+.item-card-sale .card figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card {
+  border: 0 !important;
+}
+
+.filepond--credits {
+  display: none;
+}
+
+.claim-img {
+  width: 100px;
+}
+
+.policy-selected {
+  background-color: #ffffff !important;
+  box-shadow: inset 0px 0px 0px 3px #9a0513 !important;
+}
+
+.text-colonial{
+  color: rgb(154 1 19) !important;
+}
+
+.bg-colonial{
+  background-color: rgb(154 1 19) !important;
+}
+.form-check-input:checked {
+  background-color:rgb(154 1 19) !important;
+  border-color: rgb(154 1 19) !important;
+}

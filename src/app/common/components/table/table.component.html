@@ -1,0 +1,106 @@
+<div [class]="{'justify-content-between': filters, 'justify-content-start': !filters}" class="card-header bg-white w-100 gap-2 px-2 d-flex">
+  <div *ngIf="filters" class="d-flex gap-2 align-items-center">
+    <button (click)="handleFilter(filter.value)" *ngFor="let filter of filters" [ngClass]="{'btn-dark bg-colonial': activeFilter == filter.value, 'btn-light': activeFilter !== filter.value}" class="btn btn-sm rounded-3 border-0">{{filter.label}}</button>
+    <ng-content select="[sharedTableCustomFilter]"></ng-content>
+  </div>
+  <div class="d-flex gap-2">
+    <input (keydown)="clearTimeout(searchTimeout)" (keyup)="handleSearch($event)" *ngIf="searchPlaceholder" [(ngModel)]="searchValue" [placeholder]="searchPlaceholder" class="form-control float-end form-control-sm border rounded-3" style="max-width: 300px; height: 30px;" type="text">
+    <button (click)="exportExcel.emit()" *ngIf="exportExcel.observed"
+            [disabled]="!items.length"
+            class="btn btn-outline-secondary d-flex align-items-center justify-content-between">
+      <div *ngIf="loadingExport; else export" class="spinner-border text-secondary h-50 w-50" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <ng-template #export>
+        <span class="material-symbols-outlined">description</span>
+        Excel
+      </ng-template>
+    </button>
+  </div>
+  <div *ngIf="actionButtonTitle" class="d-flex float-end">
+    <button (click)="actionButtonClicked.emit()" class="btn btn-sm btn-dark bg-colonial border-0 rounded-3 px-2">{{actionButtonTitle}}</button>
+  </div>
+</div>
+<div class="card-body p-0" >
+  <ng-container *ngIf="items.length; else noItems">
+    <div *ngIf="bulkActions && bulkActions.length && itemsSelected.length" class="bg-warning-subtle border-warning rounded py-2 px-3 m-2">
+      <div class="d-flex gap-2 align-items-center">
+        <label class="small fw-semibold">({{itemsSelected.length}}) Elementos selecionados: </label>
+        <button (click)="handleActionClicked(action)" *ngFor="let action of bulkActions" class="btn btn-sm btn-outline-dark">{{action.label}}</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover m-0 align-middle">
+        <thead class="small">
+        <tr>
+          <th *ngIf="(bulkActions && bulkActions.length) || itemsSelectedChange.observed" class="text-uppercase h6 mb-0 text-muted bg-light" style="width: 30px;">
+            <input (change)="selectAll($event)" [checked]="itemsSelected.length == items.length" aria-label="Checkbox for following text input" class="form-check-input mt-0" type="checkbox" value="">
+          </th>
+          <th *ngFor="let header of headers" class="small text-uppercase text-muted bg-light fw-semibold" style="min-width: 60px;">
+            <small>
+              {{header.label}}
+            </small>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr (click)="handleItemClicked(item)" *ngFor="let item of items" style="cursor: pointer;">
+          <td *ngIf="(bulkActions && bulkActions.length) || itemsSelectedChange.observed">
+            <input (change)="selectItem(item)" (click)="$event.stopPropagation()" [checked]="isItemSelected(item.id)" aria-label="Checkbox for following text input" class="form-check-input mt-0" type="checkbox" value="">
+          </td>
+          <td *ngFor="let header of headers" [class]="getItemClass(header, item)">
+            <div class="d-grid" style="text-wrap: nowrap;" >
+              <ng-container *ngIf="templatesIndex[header.attribute]; else switcher">
+                <span class="small">
+                  <ng-template [ngTemplateOutlet]="templatesIndex[header.attribute].templateRef" [ngTemplateOutletContext]="item"></ng-template>
+                </span>
+              </ng-container>
+              <ng-template #switcher [ngSwitch]="header.type">
+                <span *ngSwitchCase="'image'" class="small border rounded-circle overflow-hidden" style="width: 40px; height: 40px">
+                  <img [src]="item | property: header.attribute | imageUrl" class="w-100 h-100" style="object-fit: cover">
+                </span>
+                <span *ngSwitchCase="'money'"
+                      class="small">${{ item | property: header.attribute | number: '1.0-0' }}</span>
+                <span *ngSwitchCase="'number'" class="small">{{item | property: header.attribute | number: '1.0-0'}}</span>
+                <span *ngSwitchCase="'date'" class="small">{{item | property: header.attribute | date: dateFormats.ddMMyyyy}}</span>
+                <span *ngSwitchCase="'datetime'" class="small">{{item | property: header.attribute | date: dateFormats.ddMMyyyyhhmma}}</span>
+                <span *ngSwitchDefault class="small">{{item | property: header.attribute}}</span>
+              </ng-template>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+        <tfoot *ngIf="footerData.length">
+          <tr *ngFor="let dataRow of footerData">
+            <td *ngFor="let data of dataRow" class="fw-bold">{{data}}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #noItems>
+    <p  class="text-secondary my-3 m-auto" style="width: fit-content">{{noItemsTitle}}</p>
+  </ng-template>
+</div>
+<div *ngIf="pagination" class="card-footer px-2 border-0 bg-white">
+  <nav class="mx-auto d-block" style="width: fit-content;">
+    <ul class="pagination m-0">
+      <li class="page-item">
+        <button (click)="prevPage()" [disabled]="pagination.currentPage == 1" aria-label="Previous" class="page-link text-secondary">
+          <span aria-hidden="true">&laquo;</span>
+        </button>
+      </li>
+      <li>
+        <a class="page-link border-start-0 text-secondary">
+          {{pagination.currentPage}}/{{pagination.totalPages}}
+        </a>
+      </li>
+      <li class="page-item">
+        <button (click)="nextPage()" [disabled]="pagination.currentPage == pagination.totalPages" aria-label="Next" class="page-link text-secondary">
+          <span aria-hidden="true">&raquo;</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

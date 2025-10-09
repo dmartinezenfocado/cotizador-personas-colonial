@@ -1,0 +1,76 @@
+<div class="card shadow-sm rounded-4 overflow-hidden" [formGroup]="parentForm">
+  <div class="card-header bg-white py-3">
+    <h3 class="h5 mb-0">Tablero de Parámetros</h3>
+  </div>
+
+  <div class="card-body">
+    <div class="row g-4">
+      <!-- Ocupación -->
+      <div class="col-12">
+        <label class="form-label fw-semibold">Ocupación</label>
+        <select class="form-select" formControlName="occupationId">
+          <option [ngValue]="null">Seleccione una ocupación</option>
+          <option *ngFor="let oc of occupations" [ngValue]="oc.id">{{ oc.name }}</option>
+        </select>
+      </div>
+
+      <!-- Rango Edad -->
+      <div class="col-12">
+        <label class="form-label fw-semibold">Rango Edad</label>
+        <select class="form-select" formControlName="ageRange">
+          <option [ngValue]="null">Seleccione un rango</option>
+          <option *ngFor="let r of ageRanges" [ngValue]="r">{{ r }}</option>
+        </select>
+      </div>
+
+      <!-- Categoría (auto) -->
+      <div class="col-12">
+        <label class="form-label fw-semibold">Categoría de la Ocupación Seleccionada</label>
+        <input class="form-control"
+               [value]="parentForm.get('category')?.value ? 'Categoría ' + parentForm.get('category')?.value : ''"
+               disabled>
+      </div>
+
+      <!-- Sumas Aseguradas -->
+      <div class="col-12">
+        <div class="text-center fw-bold mb-2">Sumas Aseguradas</div>
+
+        <div class="row align-items-center py-2 border-top">
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="optI" id="optI">
+              <label class="form-check-label ms-2" for="optI">Opción I</label>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span [class.text-muted]="!parentForm.get('optI')?.value">{{ formatMoney(sums[0]) }}</span>
+          </div>
+        </div>
+
+        <div class="row align-items-center py-2 border-top">
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="optII" id="optII">
+              <label class="form-check-label ms-2" for="optII">Opción II</label>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span [class.text-muted]="!parentForm.get('optII')?.value">{{ formatMoney(sums[1]) }}</span>
+          </div>
+        </div>
+
+        <div class="row align-items-center py-2 border-top border-bottom">
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="optIII" id="optIII">
+              <label class="form-check-label ms-2" for="optIII">Opción III</label>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span [class.text-muted]="!parentForm.get('optIII')?.value">{{ formatMoney(sums[2]) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

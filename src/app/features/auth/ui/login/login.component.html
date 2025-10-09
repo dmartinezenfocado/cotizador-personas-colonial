@@ -1,0 +1,35 @@
+<div class="content-login" style="margin-top: 5rem;">
+  <div class="card shadow-sm border-0 rounded-tix">
+    <div class="card-body p-4 p-sm-5">
+      <header>
+        <figure class="m-0" style="width: 60px; height: 60px;">
+          <img src="/assets/img/nav/LOGO.svg"
+               style="width: 100%; height: 100%; object-fit: contain;" alt="">
+        </figure>
+      </header>
+
+      <div class="card-title my-4">
+        <h1 class="h3">Iniciar sesión</h1>
+      </div>
+
+      <div class="formAuthLogin">
+          <a class="text-secondary text-dark btn-light mb-4 btn p-0 bg-white border-0"
+             routerLink="/auth/recover-pass">¿Olvidaste tu contraseña?</a>
+          <button (click)="loginRedirect()" type="submit"
+                  class="btn btn-dark w-100 px-4 py-3 rounded-pill">Iniciar sesión</button>
+      </div>
+
+      <hr class="border-secondary mt-4 d-block">
+
+    </div>
+  </div>
+
+  <footer class="mt-4 ps-4">
+    <ul class="nav">
+      <li class="nav-item">
+        <div class="nav-link active text-secondary" aria-current="page">La Colonial de Seguros</div>
+      </li>
+    </ul>
+  </footer>
+</div>
+

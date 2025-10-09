@@ -1,0 +1,17 @@
+<nav
+  class="sidenav-horizontal d-flex justify-content-center align-items-center gap-4 px-3 py-2 bg-white shadow-sm border-top"
+>
+  <ng-container>
+    <a
+      *ngFor="let item of menuItems"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="d-flex align-items-center gap-1 btn text-secondary nav-item"
+    >
+      <span class="material-symbols-outlined fs-4">
+        {{ item.icon }}
+      </span>
+      <span class="fw-semibold small">{{ item.name }}</span>
+    </a>
+  </ng-container>
+</nav>

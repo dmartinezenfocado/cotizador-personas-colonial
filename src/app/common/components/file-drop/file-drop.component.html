@@ -1,0 +1,7 @@
+<ngx-file-drop [accept]='acceptedImages' dropZoneLabel="Drop files here" (onFileDrop)="handleDropped($event)">
+  <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+    <p (click)="openFileSelector()" class="m-0 d-flex align-items-center justify-content-center w-100 h-100" style="cursor: pointer">
+      {{placeholder}}
+    </p>
+  </ng-template>
+</ngx-file-drop>
