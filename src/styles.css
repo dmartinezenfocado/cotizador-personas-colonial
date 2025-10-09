@@ -150,3 +150,8 @@
   background-color:rgb(154 1 19) !important;
   border-color: rgb(154 1 19) !important;
 }
+
+.app-short-term-rate {
+  display: block;
+  width: 100%;
+}

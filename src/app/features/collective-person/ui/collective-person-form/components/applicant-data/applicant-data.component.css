@@ -1,0 +1,4 @@
+/* Opcional: ajusta márgenes y feedback */
+.form-text { margin-top: .25rem; }
+.invalid-feedback { display: block; }
+

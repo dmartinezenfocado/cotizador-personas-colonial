@@ -1,0 +1,32 @@
+.montos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* tres columnas iguales */
+  border: 1px dotted #bbb;
+  border-right: none;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.monto-celda {
+  text-align: center;
+  padding: 8px 0;
+  border-right: 1px dotted #bbb;
+  font-weight: 500;
+  color: #333;
+  min-width: 100px;
+}
+
+.monto-celda:last-child {
+  border-right: none;
+}
+
+
+.card { border: 2px solid #333; } 
+.card-header {
+  border-bottom: 2px solid #333;
+  text-align: center;
+  font-weight: 700;
+}
+.card-body .form-check-input { cursor: pointer; }
+.card-body .form-check-label { cursor: pointer; }
+

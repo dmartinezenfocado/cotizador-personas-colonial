@@ -79,7 +79,6 @@
   opacity: .35;             
 }
 
-/* Input para coberturas “free” */
 .free-input {
   display: inline-flex;
   align-items: center;
@@ -99,7 +98,6 @@
   }
 }
 
-/* Ajustes visuales */
 .form-check-input {
   width: 1rem;
   height: 1rem;

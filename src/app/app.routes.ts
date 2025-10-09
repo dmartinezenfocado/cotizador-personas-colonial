@@ -1,15 +1,12 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './core/layout/layout.component';
-// import { MsalGuard } from '@azure/msal-angular';
-// import authRoutes from './features/auth/routes';
-import individualPersonFormRoutes from './features/persona-individual/routes';
-
+import individualPersonFormRoutes from './features/individual-person/routes';
+import CollectivePersonFormRoutes from './features/collective-person/routes';
+//import individualPersonFormRoutes from './features/collective-person/routes';
 
 export const routes: Routes = [
-  // ...authRoutes,
   {
     path: '',
-   // canActivate: [MsalGuard],
     component: LayoutComponent,
     children: [
       {
@@ -18,6 +15,8 @@ export const routes: Routes = [
         pathMatch:'full'
       },
       ...individualPersonFormRoutes,
+      ...CollectivePersonFormRoutes,
+
     ]
   },
 

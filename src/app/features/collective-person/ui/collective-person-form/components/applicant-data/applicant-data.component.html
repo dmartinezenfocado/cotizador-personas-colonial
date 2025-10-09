@@ -1,0 +1,40 @@
+<div [formGroup]="form">
+  <h5 class="fw-bold border-bottom pb-2 mb-3">Datos del Solicitante</h5>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label" for="clientName">Cliente</label>
+      <select id="clientName" class="form-select" formControlName="clientName"
+              [class.is-invalid]="(submitted || f['clientName'].touched) && f['clientName'].invalid"
+              aria-describedby="clientHelp">
+        <option value="">Seleccione un cliente</option>
+        <option value="miguel">Miguel Acosta</option>
+        <option value="juan">Juan Pérez</option>
+        <option value="ana">Ana Rodríguez</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label" for="intermediario">Intermediario</label>
+      <select id="intermediario" class="form-select" formControlName="intermediario"
+              [class.is-invalid]="(submitted || f['intermediario'].touched) && f['intermediario'].invalid">
+        <option value="">Seleccione un intermediario</option>
+        <option value="directo">Negocio Directo</option>
+        <option value="broker1">Broker A</option>
+        <option value="broker2">Broker B</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label" for="fecha">Fecha</label>
+      <input id="fecha" class="form-control" formControlName="fecha" type="date"
+             [class.is-invalid]="(submitted || f['fecha'].touched) && f['fecha'].invalid" />
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label" for="RNC">RNC</label>
+      <input id="RNC" class="form-control" formControlName="RNC" type="text" placeholder="000-0000000-0"
+             [class.is-invalid]="(submitted || f['RNC'].touched) && f['RNC'].invalid" />
+    </div>
+  </div>
+</div>

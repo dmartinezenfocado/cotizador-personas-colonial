@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgFor } from '@angular/common';
-//import { AuthService } from '../../../../features/auth/services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -19,7 +18,7 @@ export class SidenavComponent {
       allowedProfiles: []
     },
     {
-      route: '',
+      route: '/collective-Person',
       icon: 'groups',
       name: 'Colectiva',
       allowedProfiles: []

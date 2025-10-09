@@ -1,0 +1,66 @@
+<form [formGroup]="collectivePersonForm" novalidate autocomplete="off">
+  <div class="row g-4 align-items-start">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm rounded-4 overflow-hidden h-100">
+        <div class="card-header bg-white py-3">
+          <h3 class="h5 d-flex gap-2 mb-0 align-items-center">
+            <span>Cotización Seguro de Accidentes Personales Colectivo</span>
+          </h3>
+        </div>
+
+        <div class="card-body border-0">
+          <app-applicant-data
+            [form]="collectivePersonForm"
+            [submitted]="submitted">
+          </app-applicant-data>
+        </div>
+
+        <div class="card-body border-0">
+          <app-insurance-data
+            [form]="collectivePersonForm"
+            [submitted]="submitted">
+          </app-insurance-data>
+        </div>
+
+        <div class="card-body border-0">
+          <app-coverages-limits
+            [definitions]="COVERAGES"
+            [coveragesFA]="coverages"
+            [visibleTierIdxs]="visibleTierIdxs"
+            (coverageToggled)="onCoverageToggled($event)">
+          </app-coverages-limits>
+
+          <div class="row mt-4">
+            <div class="col-12 col-md-6 offset-md-6">
+              <app-premium-summary
+                [net]="netPremium"
+                [taxRate]="0.16"
+                [currency]="currency">
+              </app-premium-summary>
+            </div>
+          </div>
+        </div>
+
+        <app-quotation-notice></app-quotation-notice>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <div class="position-sticky" style="top: 1rem;">
+        <app-parameters-board
+          [parentForm]="collectivePersonForm"
+          [occupations]="occupations"
+          [ageRanges]="ageRanges"
+          [sums]="[300000,400000,500000]">
+        </app-parameters-board>
+
+         <div class="mt-4" >
+          <app-short-term-rate [percentage]="25.48"></app-short-term-rate>
+        </div>
+      </div>
+    </div>
+
+ 
+
+  </div>
+</form>

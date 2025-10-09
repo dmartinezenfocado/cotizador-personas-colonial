@@ -4,3 +4,14 @@
 .border-danger{
   border-color:rgb(154 1 19) !important;
 }
+
+.logo-header {
+  max-width: 214px;
+  height: auto;
+}
+
+@media (max-width: 576px) {
+  .logo-header {
+    max-width: 160px; /* se reduce en móviles */
+  }
+}

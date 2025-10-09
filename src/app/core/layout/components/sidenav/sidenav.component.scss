@@ -1,29 +1,85 @@
-.border-danger{
-    border-color:rgb(154 1 19) !important;
-  }
+// .border-danger{
+//     border-color:rgb(154 1 19) !important;
+//   }
 
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 300,
-  'GRAD' 0,
-  'opsz' 24
+// .material-symbols-outlined {
+//   font-variation-settings:
+//   'FILL' 0,
+//   'wght' 300,
+//   'GRAD' 0,
+//   'opsz' 24
+// }
+
+// .sidenav-horizontal {
+//   background-color: var(--bs-light-rgb);
+//   width: 100%;                
+//   border-bottom: 1px solid #dee2e6; 
+//   position: relative;            
+//   z-index: 2;                    
+//   gap: 2rem;                     
+//   padding: 0.5rem 1rem;
+//   margin-top: 1rem;
+
+//   a {
+//     flex-direction: row;         
+//     justify-content: center;
+//     align-items: center;
+//     text-decoration: none;
+//   }
+// }
+/* === Mantiene tu diseño original en desktop === */
+:root{
+  --bottomnav-height: 56px;
 }
 
-.sidenav-horizontal {
-  background-color: var(--bs-light-rgb);
-  width: 100%;                
-  border-bottom: 1px solid #dee2e6; 
-  position: relative;            
-  z-index: 2;                    
-  gap: 2rem;                     
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
+@media (min-width: 992px){
+  .sidenav-horizontal{
+    margin-top: 1rem;  /* ✅ recupera tu espaciado original */
+    position: static;  /* ✅ no interferimos con desktop */
+    width: 100%;
+  }
+}
 
-  a {
-    flex-direction: row;         
-    justify-content: center;
+/* === Hace el nav responsive solo en móvil === */
+@media (max-width: 991.98px){
+  .main-content-app { 
+    padding-bottom: 56px; /* espacio para que no tape contenido */
+  }
+
+  .sidenav-horizontal{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    margin-top: 0;  /* en móvil no lo necesitamos */
+    border-top: 1px solid #dee2e6;
+    z-index: 1030;
+    background-color: #fff;
+    display: flex !important;
+    flex-direction: row !important;
     align-items: center;
-    text-decoration: none;
+    gap: .5rem !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: .25rem .5rem;
   }
+
+  .sidenav-horizontal .nav-item{
+    flex: 0 0 auto;
+    min-width: max-content;
+    border-radius: .75rem;
+    padding: .35rem .6rem;
+    scroll-snap-align: center;
+  }
+
+    .main-section{
+    padding-bottom: calc(var(--bottomnav-height) + env(safe-area-inset-bottom) + 16px);
+    /* el +16px es un respiro extra para que no quede justo */
+  }
+
 }
+
+
