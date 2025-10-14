@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* El card debe ocupar todo el ancho y sin márgenes laterales */
+.card {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Por si quedó algún max-width de versiones anteriores */
+.rate-box, .panel, .container, .wrapper {
+  max-width: none !important;
+}
+
+/* Flecha verde */
+.rate-caret {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid #28a745;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}

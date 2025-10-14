@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './core/layout/layout.component';
 import individualPersonFormRoutes from './features/individual-person/routes';
 import CollectivePersonFormRoutes from './features/collective-person/routes';
-//import individualPersonFormRoutes from './features/collective-person/routes';
+import SchoolChildrenPersonRoutes from './features/schoolchildren-person/routes';
+
 
 export const routes: Routes = [
   {
@@ -16,6 +17,7 @@ export const routes: Routes = [
       },
       ...individualPersonFormRoutes,
       ...CollectivePersonFormRoutes,
+      ...SchoolChildrenPersonRoutes,
 
     ]
   },
