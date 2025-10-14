@@ -4,11 +4,10 @@ import { FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@an
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-general-data',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './general-data.component.html',
-  styleUrls: ['./general-data.component.scss']
+    selector: 'app-general-data',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './general-data.component.html',
+    styleUrls: ['./general-data.component.css']
 })
 export class GeneralDataComponent implements OnInit, OnDestroy {
   @Input({ required: true }) form!: FormGroup;

@@ -38,12 +38,11 @@ import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CoverageDef } from '../../../core/data/models/coverage-def.model';
 
 @Component({
-  selector: 'app-coverages-limits',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './coverage-limits.component.html',
-  styleUrls: ['./coverage-limits.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-coverages-limits',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './coverage-limits.component.html',
+    styleUrls: ['./coverage-limits.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CoveragesLimitsComponent {
   @Input({ required: true }) definitions: CoverageDef[] = [];

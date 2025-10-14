@@ -28,21 +28,20 @@ import { FormsModule } from '@angular/forms';
 import { dateFormats } from '../../constants/dateFormats';
 
 @Component({
-  selector: 'shared-table',
-  standalone: true,
-  imports: [
-    NgIf,
-    NgFor,
-    NgSwitchCase,
-    NgSwitchDefault,
-    PropertyPipe,
-    DecimalPipe,
-    ImageUrlPipe,
-    CommonModule,
-    FormsModule,
-  ],
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss'],
+    selector: 'shared-table',
+    imports: [
+        NgIf,
+        NgFor,
+        NgSwitchCase,
+        NgSwitchDefault,
+        PropertyPipe,
+        DecimalPipe,
+        ImageUrlPipe,
+        CommonModule,
+        FormsModule,
+    ],
+    templateUrl: './table.component.html',
+    styleUrls: ['./table.component.scss']
 })
 export class TableComponent implements AfterContentInit {
   @ContentChildren(TableColumnDirective)

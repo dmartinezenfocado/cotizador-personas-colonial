@@ -49,11 +49,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { filter, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
-  imports: [HeaderComponent, SidenavComponent, RouterOutlet, NgbModule],
+    selector: 'app-layout',
+    templateUrl: './layout.component.html',
+    styleUrls: ['./layout.component.scss'],
+    imports: [HeaderComponent, SidenavComponent, RouterOutlet, NgbModule]
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   showMobileNav = false;

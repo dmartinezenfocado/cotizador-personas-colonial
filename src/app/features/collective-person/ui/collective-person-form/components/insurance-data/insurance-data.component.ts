@@ -4,12 +4,11 @@ import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription, combineLatest } from 'rxjs';
 
 @Component({
-  selector: 'app-insurance-data',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './insurance-data.component.html',
-  styleUrls: ['./insurance-data.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-insurance-data',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './insurance-data.component.html',
+    styleUrls: ['./insurance-data.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InsuranceDataComponent implements OnInit, OnDestroy {
   @Input({ required: true }) form!: FormGroup;

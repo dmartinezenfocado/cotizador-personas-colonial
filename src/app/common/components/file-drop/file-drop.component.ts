@@ -3,9 +3,10 @@ import acceptedImages from "../../constants/acceptedImages";
 import {NgxFileDropEntry} from "ngx-file-drop";
 
 @Component({
-  selector: 'shared-file-drop',
-  templateUrl: './file-drop.component.html',
-  styleUrls: ['./file-drop.component.css']
+    selector: 'shared-file-drop',
+    templateUrl: './file-drop.component.html',
+    styleUrls: ['./file-drop.component.css'],
+    standalone: false
 })
 export class FileDropComponent {
   @Input() placeholder = ''

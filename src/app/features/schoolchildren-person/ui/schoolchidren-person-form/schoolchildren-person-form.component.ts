@@ -23,20 +23,20 @@ type CoverageGroup = FormGroup<{
 }>;
 
 @Component({
-  selector: 'app-schoolchildren-person-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    CoveragesLimitsComponent,
-    GeneralDataComponent,
-    PremiumSummaryComponent,
-    QuotationNoticeComponent,
-    ParametersBoardComponent,
-    SchoolDataComponent
-  ],
-  templateUrl: './schoolchildren-person-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-schoolchildren-person-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        CoveragesLimitsComponent,
+        GeneralDataComponent,
+        PremiumSummaryComponent,
+        QuotationNoticeComponent,
+        ParametersBoardComponent,
+        SchoolDataComponent
+    ],
+    templateUrl: './schoolchildren-person-form.component.html',
+    styleUrls: ['./schoolchildren-person-form.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SchoolChildrenPersonFormComponent {
   private readonly fb = inject(FormBuilder);

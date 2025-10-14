@@ -3,11 +3,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SidenavComponent } from '../sidenav/sidenav.component';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [NgbModule],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-header',
+    imports: [NgbModule],
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   @Output() openMobileNav = new EventEmitter()

@@ -4,11 +4,10 @@ import { FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@an
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-school-data',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './school-data.component.html',
-  styleUrls: ['./school-data.component.scss']
+    selector: 'app-school-data',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './school-data.component.html',
+    styleUrls: ['./school-data.component.css']
 })
 export class SchoolDataComponent implements OnInit, OnDestroy {
   @Input({ required: true }) form!: FormGroup;

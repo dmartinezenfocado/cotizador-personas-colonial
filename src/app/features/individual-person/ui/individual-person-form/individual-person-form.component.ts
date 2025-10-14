@@ -13,19 +13,18 @@ type Category = 'I' | 'II' | 'III';
 interface Occupation { id: number; name: string; category: Category; }
 
 @Component({
-
-  selector: 'app-individual-person-form',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    CoveragesLimitsComponent, 
-    GeneralDataComponent, 
-    PremiumSummaryComponent, 
-    QuotationNoticeComponent, 
-    ParametersBoardComponent],
-  templateUrl: './individual-person-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-individual-person-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        CoveragesLimitsComponent,
+        GeneralDataComponent,
+        PremiumSummaryComponent,
+        QuotationNoticeComponent,
+        ParametersBoardComponent
+    ],
+    templateUrl: './individual-person-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IndividualPersonFormComponent implements OnInit, OnDestroy {
   submitted = false;

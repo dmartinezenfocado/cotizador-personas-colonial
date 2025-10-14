@@ -6,12 +6,11 @@ type Category = 'I' | 'II' | 'III';
 export interface Occupation { id: number; name: string; category: Category; }
 
 @Component({
-  selector: 'app-parameters-board',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './parameters-board.component.html',
-  styleUrls: ['./parameters-board.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-parameters-board',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './parameters-board.component.html',
+    styleUrls: ['./parameters-board.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParametersBoardComponent {
   @Input({ required: true }) parentForm!: FormGroup;

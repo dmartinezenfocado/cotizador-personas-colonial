@@ -15,21 +15,20 @@ type Category = 'I' | 'II' | 'III';
 interface Occupation { id: number; name: string; category: Category; }
 
 @Component({
-
-  selector: 'app-collective-person-form',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    CoveragesLimitsComponent, 
-    ApplicantDataComponent,
-    InsuranceDataComponent, 
-    PremiumSummaryComponent, 
-    QuotationNoticeComponent, 
-    ParametersBoardComponent,
-    ShortTermRateComponent],
-  templateUrl: './collective-person-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-collective-person-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        CoveragesLimitsComponent,
+        ApplicantDataComponent,
+        InsuranceDataComponent,
+        PremiumSummaryComponent,
+        QuotationNoticeComponent,
+        ParametersBoardComponent,
+        ShortTermRateComponent
+    ],
+    templateUrl: './collective-person-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   submitted = false;

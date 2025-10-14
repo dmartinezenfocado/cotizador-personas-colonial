@@ -2,11 +2,10 @@ import { NgIf } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'shared-show-hide-password',
-  standalone: true,
-  imports: [NgIf],
-  templateUrl: './show-hide-password.component.html',
-  styleUrls: ['./show-hide-password.component.css']
+    selector: 'shared-show-hide-password',
+    imports: [NgIf],
+    templateUrl: './show-hide-password.component.html',
+    styleUrls: ['./show-hide-password.component.css']
 })
 export class ShowHidePasswordComponent implements OnInit {
 

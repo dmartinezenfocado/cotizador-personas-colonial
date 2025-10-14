@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-applicant-data',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './applicant-data.component.html',
-  styleUrls: ['./applicant-data.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-applicant-data',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './applicant-data.component.html',
+    styleUrls: ['./applicant-data.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicantDataComponent implements OnInit {
   @Input({ required: true }) form!: FormGroup;

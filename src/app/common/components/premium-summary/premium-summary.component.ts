@@ -2,12 +2,11 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-premium-summary',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './premium-summary.component.html',
-  styleUrls: ['./premium-summary.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-premium-summary',
+    imports: [CommonModule],
+    templateUrl: './premium-summary.component.html',
+    styleUrls: ['./premium-summary.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PremiumSummaryComponent {
  
