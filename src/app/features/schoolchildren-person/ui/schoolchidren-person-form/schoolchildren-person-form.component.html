@@ -14,7 +14,10 @@
         </div>
 
         <div class="card-body border-0">
-          <app-coverages-limits [definitions]="COVERAGES" [coveragesFA]="coverages"
+          <app-coverages-limits 
+            mode="editable"
+            [definitions]="COVERAGES" 
+            [coveragesFA]="coverages"
             (coverageToggled)="onCoverageToggled($event)">
           </app-coverages-limits>
         </div>

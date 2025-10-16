@@ -12,7 +12,7 @@ export const routes: Routes = [
     children: [
       {
         path:'',
-        redirectTo:'dashboard',
+        redirectTo:'individual-person',
         pathMatch:'full'
       },
       ...individualPersonFormRoutes,

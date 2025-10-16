@@ -7,41 +7,56 @@
     </div>
 
     <div class="tbody">
-      <div class="tr" *ngFor="let _ of coveragesFA.controls; let i = index; trackBy: trackByIndex"
-        [formGroup]="getGroup(i)">
-        <div class="td td-cob">
-          <div class="form-check m-0">
-            <input class="form-check-input" type="checkbox" formControlName="selected" (change)="onToggle(i)"
-              [id]="'cov_'+i" />
-            <label class="form-check-label fw-semibold ms-2" [for]="'cov_'+i">
-              {{ definitions[i].name }}
-            </label>
+      @let defs = definitions();
+      @let vIdxs = visibleTierIdxs();
+
+      @for (ctrl of coveragesFA().controls; track trackByIndex($index); let i = $index) {
+        <div class="tr" [formGroup]="getGroup(i)">
+          <div class="td td-cob">
+            <div class="form-check m-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                formControlName="selected"
+                (change)="onToggle(i)"
+                [id]="'cov_'+i"
+              />
+              <label class="form-check-label fw-semibold ms-2" [for]="'cov_'+i">
+                {{ defs[i]?.name }}
+              </label>
+            </div>
+          </div>
+
+          <div class="td td-montos">
+            @if (defs[i]?.kind === 'tier') {
+              <div class="montos-grid">
+                @for (t of (defs[i]?.tiers || []); track $index; let ti = $index) {
+                  <div class="monto-celda" [class.disabled]="!vIdxs.includes(ti)">
+                    @if (isSelected(i) && vIdxs.includes(ti)) {
+                      {{ t | number:'1.0-2' }}
+                    } @else {
+                      —
+                    }
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="free-input">
+                <input
+                  type="number"
+                  class="form-control text-center"
+                  formControlName="amount"
+                  [disabled]="!isSelected(i)"
+                  min="0"
+                  step="1"
+                  placeholder="Monto"
+                />
+                <span class="suffix">{{ defs[i]?.suffix || '' }}</span>
+              </div>
+            }
           </div>
         </div>
-        <div class="td td-montos">
-          
-        <ng-container *ngIf="definitions[i]?.kind === 'tier'; else freeAmountTpl">
-          <div class="montos-grid">
-            <div class="monto-celda" *ngFor="let t of definitions[i]?.tiers; let ti = index"
-              [class.disabled]="!visibleTierIdxs.includes(ti)">
-              <ng-container *ngIf="isSelected(i) && visibleTierIdxs.includes(ti); else dashTpl">
-                {{ t | number:'1.0-2' }}
-              </ng-container>
-            </div>
-            <ng-template #dashTpl>—</ng-template>
-          </div>
-        </ng-container>
-
-
-          <ng-template #freeAmountTpl>
-            <div class="free-input">
-              <input type="number" class="form-control text-center" formControlName="amount" [disabled]="!isSelected(i)"
-                min="0" step="1" placeholder="Monto" />
-              <span class="suffix">{{ definitions[i].suffix || '' }}</span>
-            </div>
-          </ng-template>
-        </div>
-      </div>
+      }
     </div>
   </div>
 </div>

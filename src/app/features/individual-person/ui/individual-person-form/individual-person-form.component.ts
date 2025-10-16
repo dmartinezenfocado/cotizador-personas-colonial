@@ -82,7 +82,7 @@ export class IndividualPersonFormComponent implements OnInit, OnDestroy {
         this.individualPersonForm.get('category')?.setValue(cat, { emitEvent: false });
       });
   }
-  
+
   private setupCategoryOptionsSync(): void {
     this.subOpts = combineLatest([
       this.individualPersonForm.get('optI')!.valueChanges,
@@ -113,9 +113,9 @@ export class IndividualPersonFormComponent implements OnInit, OnDestroy {
     occupationId: [null as number | null, Validators.required],
     ageRange: [null as string | null, Validators.required],
     category: [{ value: null as Category | null, disabled: true }],
-    optI: [false],
-    optII: [false],
-    optIII: [false],
+    optI: [true],
+    optII: [true],
+    optIII: [true],
 
     coverages: this.fb.array(this.COVERAGES.map(() =>
       this.fb.group({ selected: [false], amount: [null] })

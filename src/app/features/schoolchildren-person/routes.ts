@@ -5,7 +5,7 @@ import { SchoolChildrenPersonFormComponent } from "./ui/schoolchidren-person-for
 
 const SchoolChildrenPersonRoutes: Route[] = [
     {
-      path: '',
+      path: 'schoolchildren-person',
       children: [
         {
           path: '',

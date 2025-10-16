@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription, combineLatest } from 'rxjs';
 import { CoverageDef } from '../../../../core/data/models/coverage-def.model';
 import { CoveragesLimitsComponent } from '../../../../common/components/coverage-limits/coverage-limits.component';
-import { PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
+import { PremiumCalcContext, PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
 import { ParametersBoardComponent } from '../../../../common/components/parameters-board/parameters-board.component';
 import { ApplicantDataComponent } from './components/applicant-data/applicant-data.component';
 import { InsuranceDataComponent } from './components/insurance-data/insurance-data.component';
@@ -32,7 +32,7 @@ interface Occupation { id: number; name: string; category: Category; }
 export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   submitted = false;
   netPremium = 0;
-  baseTecnicaBruta = 1500;
+  baseTecnicaBruta = 15000;
   private sub?: Subscription;
   private subOpts?: Subscription;
 
@@ -45,11 +45,11 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   ageRanges: string[] = ['Hasta 55', '56 - 65', '66 - 70'];
 
   readonly COVERAGES: CoverageDef[] = [
-    { name: 'Muerte Accidental', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.18 },
-    { name: 'Desmembramiento', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.09 },
-    { name: 'Incapacidad Total y Permanente', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.06 },
-    { name: 'Comp. Semanal', kind: 'tier', tiers: [1500, 2000, 2500], suffix: 'DOP', ratePct: 0.03 },
-    { name: 'Gastos Médicos por Accidente', kind: 'tier', tiers: [30000, 40000, 50000], suffix: 'DOP', ratePct: 2.27 },
+    { name: 'Muerte Accidental', kind: 'tier', tiers: [250000, 400000, 500000], suffix: 'DOP', ratePct: 0.18 },
+    { name: 'Desmembramiento', kind: 'tier', tiers: [250000, 400000, 500000], suffix: 'DOP', ratePct: 0.09 },
+    { name: 'Incapacidad Total y Permanente', kind: 'tier', tiers: [250000, 400000, 500000], suffix: 'DOP', ratePct: 0.06 },
+    { name: 'Comp. Semanal', kind: 'tier', tiers: [1250, 2000, 2500], suffix: 'DOP', ratePct: 0.03 },
+    { name: 'Gastos Médicos por Accidente', kind: 'tier', tiers: [25000, 40000, 50000], suffix: 'DOP', ratePct: 2.27 },
   ];
 
 
@@ -59,7 +59,7 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   moneda: ['', Validators.required],
   formaPago: ['', Validators.required],
   RNC: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{7}-\d{1}$/)]],
-  fecha: ['', Validators.required],             // si lo sigues usando en otra sección
+  fecha: ['', Validators.required],             
   fechaNacimiento: ['', Validators.required],
   edad: [{ value: 0, disabled: true }],
   occupationId: [null as number | null, Validators.required],
@@ -71,7 +71,9 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   inicioVigencia: ['', Validators.required],
   finVigencia: ['', Validators.required],
   cantidadDias: [{ value: 0, disabled: false }],
-  cantidadAsegurados: [{ value: 0, disabled: false }],
+  cantidadAsegurados: [{ value: 100, disabled: false }],
+  shortTermFactor: [0.35],   // AH6
+  exentoY12: [false], 
 
 
   coverages: this.fb.array(this.COVERAGES.map(() =>
@@ -208,5 +210,32 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
     if (!this.isMuerteAccidentalSelected) return [];
     return this.visibleTierIdxs;
   }
+
+
+computeNetColectivo = (ctx: PremiumCalcContext, opt: number): number => {
+  if (!ctx.visibleTierIdxs.includes(opt) || !ctx.enablePremium) return 0;
+
+  let sum = 0;
+  for (let i = 0; i < ctx.definitions.length; i++) {
+    const def = ctx.definitions[i];
+    const fg = ctx.coveragesFA.at(i) as FormGroup;
+    if (!fg.get('selected')?.value) continue;
+
+    const rate = (def.ratePct ?? 0) / ctx.rateDivisor;
+    const base = def.kind === 'tier'
+      ? (def.tiers?.[opt] ?? 0)
+      : (Number(fg.get('amount')?.value) || 0);
+
+    sum += base * rate;
+  }
+  const AH6 = Number(ctx.extra?.AH6 ?? 1);       
+  const D13 = Number(ctx.extra?.D13 ?? 0);      
+  const Y12 = !!ctx.extra?.Y12;                  
+  const siY12 = Y12 ? 0 : 1;
+  const siG3  = ctx.enablePremium ? 1 : 0;   
+  const siD13 = (D13 < 10) ? 0 : 1;
+
+  return sum * AH6 * D13 * siY12 * siG3 * siD13;
+};
 
 }

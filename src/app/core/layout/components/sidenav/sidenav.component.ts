@@ -24,7 +24,7 @@ export class SidenavComponent {
       allowedProfiles: []
     },
     {
-      route: '',
+      route: 'schoolchildren-person',
       icon: 'groups',
       name: 'Escolares',
       allowedProfiles: []

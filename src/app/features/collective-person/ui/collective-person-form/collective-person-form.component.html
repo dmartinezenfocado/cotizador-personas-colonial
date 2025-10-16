@@ -7,21 +7,18 @@
             <span>Cotización Seguro de Accidentes Personales Colectivo</span>
           </h3>
         </div>
-
         <div class="card-body border-0">
           <app-applicant-data
             [form]="collectivePersonForm"
             [submitted]="submitted">
           </app-applicant-data>
         </div>
-
         <div class="card-body border-0">
           <app-insurance-data
             [form]="collectivePersonForm"
             [submitted]="submitted">
           </app-insurance-data>
         </div>
-
         <div class="card-body border-0">
           <app-coverages-limits
             [definitions]="COVERAGES"
@@ -32,36 +29,44 @@
 
           <div class="row mt-4">
             <div class="col-12 col-md-6 offset-md-6">
-             <app-premium-summary
+              <app-premium-summary
                 [definitions]="COVERAGES"
                 [coveragesFA]="coverages"
                 [iscPct]="16"
-                [baseTecnicaBruta]="baseTecnicaBruta"
+                [rateDivisor]="100"
                 [visibleTierIdxs]="premiumVisibleTierIdxs"
-                [enablePremium]="enablePremium">
+                [enablePremium]="enablePremium"
+                [computeNet]="computeNetColectivo"
+                [extra]="{
+                  AH6: collectivePersonForm.get('shortTermFactor')?.value,  
+                  D13: collectivePersonForm.get('cantidadAsegurados')?.value,
+                  Y12: collectivePersonForm.get('exentoY12')?.value
+                }">
               </app-premium-summary>
             </div>
           </div>
+          <div class="row justify-content-end">
+            <div class="col-3">
+              <button class="btn btn-dark bg-colonial border-0 w-100 my-3 btn-lg rounded-3 justify-content-center" type="submit">
+                Enviar
+              </button>
+            </div>
+      </div>
         </div>
       </div>
     </div>
-
     <div class="col-12 col-lg-4">
       <div class="position-sticky" style="top: 1rem;">
         <app-parameters-board
           [parentForm]="collectivePersonForm"
           [occupations]="occupations"
           [ageRanges]="ageRanges"
-          [sums]="[300000,400000,500000]">
+          [sums]="[250000,400000,500000]">
         </app-parameters-board>
-
          <div class="mt-4" >
           <app-short-term-rate [percentage]="25.48"></app-short-term-rate>
         </div>
       </div>
     </div>
-
- 
-
   </div>
 </form>
