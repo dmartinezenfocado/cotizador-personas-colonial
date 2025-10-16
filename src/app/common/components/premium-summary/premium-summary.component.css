@@ -1,3 +1,59 @@
-.fw-semibold { font-weight: 600; }
+.premium-card {
+    background: #fff;
+    border-radius: .75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+    padding: 1rem 1.25rem
+}
 
+.header-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: .5rem;
+    margin-bottom: .75rem
+}
 
+.header-row .title {
+    font-weight: 600;
+    font-size: 1.05rem
+}
+
+.header-row .options {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 3rem
+}
+
+.option-head.disabled {
+    opacity: .5
+}
+
+.row-line {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: .35rem 0
+}
+
+.row-line.total {
+    border-top: 1px dashed #ddd;
+    margin-top: .25rem;
+    padding-top: .6rem
+}
+
+.row-values {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 3rem;
+    min-width: 22rem
+}
+
+.cell {
+    text-align: right;
+    min-width: 7rem
+}
+
+.cell.disabled {
+    opacity: .5
+}

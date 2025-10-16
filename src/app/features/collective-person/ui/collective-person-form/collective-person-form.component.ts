@@ -5,7 +5,6 @@ import { Subscription, combineLatest } from 'rxjs';
 import { CoverageDef } from '../../../../core/data/models/coverage-def.model';
 import { CoveragesLimitsComponent } from '../../../../common/components/coverage-limits/coverage-limits.component';
 import { PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
-import { QuotationNoticeComponent } from '../../../../common/components/quotation-notice/quotation-notice.component';
 import { ParametersBoardComponent } from '../../../../common/components/parameters-board/parameters-board.component';
 import { ApplicantDataComponent } from './components/applicant-data/applicant-data.component';
 import { InsuranceDataComponent } from './components/insurance-data/insurance-data.component';
@@ -16,6 +15,7 @@ interface Occupation { id: number; name: string; category: Category; }
 
 @Component({
     selector: 'app-collective-person-form',
+    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -23,7 +23,6 @@ interface Occupation { id: number; name: string; category: Category; }
         ApplicantDataComponent,
         InsuranceDataComponent,
         PremiumSummaryComponent,
-        QuotationNoticeComponent,
         ParametersBoardComponent,
         ShortTermRateComponent
     ],
@@ -33,6 +32,7 @@ interface Occupation { id: number; name: string; category: Category; }
 export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   submitted = false;
   netPremium = 0;
+  baseTecnicaBruta = 1500;
   private sub?: Subscription;
   private subOpts?: Subscription;
 
@@ -45,12 +45,13 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   ageRanges: string[] = ['Hasta 55', '56 - 65', '66 - 70'];
 
   readonly COVERAGES: CoverageDef[] = [
-    { name: 'Muerte Accidental', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Desmembramiento', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Incapacidad Total y Permanente', kind:'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Comp. Semanal', kind:'tier', tiers: [1500, 2000, 2500], suffix: 'DOP' },
-    { name: 'Gastos Médicos por Accidente', kind:'tier', tiers: [30000, 40000, 50000], suffix: 'DOP' }
+    { name: 'Muerte Accidental', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.18 },
+    { name: 'Desmembramiento', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.09 },
+    { name: 'Incapacidad Total y Permanente', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.06 },
+    { name: 'Comp. Semanal', kind: 'tier', tiers: [1500, 2000, 2500], suffix: 'DOP', ratePct: 0.03 },
+    { name: 'Gastos Médicos por Accidente', kind: 'tier', tiers: [30000, 40000, 50000], suffix: 'DOP', ratePct: 2.27 },
   ];
+
 
  collectivePersonForm: FormGroup = this.fb.group({
   clientName: [''],
@@ -185,8 +186,27 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   }
 
   get currency(): string {
-  const value = this.collectivePersonForm.get('moneda')?.value;
-  return value === 'usd' ? 'US$' : 'RD$';
-}
+    const value = this.collectivePersonForm.get('moneda')?.value;
+    return value === 'usd' ? 'US$' : 'RD$';
+  }
+
+ get enablePremium(): boolean {
+    const idx = this.findCoverageIndexByName('Muerte Accidental');
+    if (idx < 0) return true;
+    return !!(this.coverages.at(idx).get('selected')?.value);
+  }
+ private findCoverageIndexByName(name: string): number {
+    return this.COVERAGES.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
+  }
+  private get isMuerteAccidentalSelected(): boolean {
+    const idx = this.findCoverageIndexByName('Muerte Accidental');
+    if (idx < 0) return true;
+    return !!(this.coverages.at(idx).get('selected')?.value);
+  }
+
+  get premiumVisibleTierIdxs(): number[] {
+    if (!this.isMuerteAccidentalSelected) return [];
+    return this.visibleTierIdxs;
+  }
 
 }

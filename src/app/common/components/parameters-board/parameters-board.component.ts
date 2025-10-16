@@ -7,6 +7,7 @@ export interface Occupation { id: number; name: string; category: Category; }
 
 @Component({
     selector: 'app-parameters-board',
+    standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './parameters-board.component.html',
     styleUrls: ['./parameters-board.component.css'],
@@ -14,8 +15,8 @@ export interface Occupation { id: number; name: string; category: Category; }
 })
 export class ParametersBoardComponent {
   @Input({ required: true }) parentForm!: FormGroup;
-  @Input({ required: true }) occupations: Occupation[] = [];
-  @Input({ required: true }) ageRanges: string[] = [];
+  @Input({ required: true }) occupations!: readonly Occupation[];
+  @Input() ageRanges: readonly string[] = [];
   @Input() sums: [number, number, number] = [300000, 400000, 500000];
 
   formatMoney(v: number): string {

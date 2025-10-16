@@ -10,12 +10,9 @@ import {
 } from '@angular/forms';
 
 import { CoverageDef } from '../../../../core/data/models/coverage-def.model';
-import { CoveragesLimitsComponent } from '../../../../common/components/coverage-limits/coverage-limits.component';
-import { GeneralDataComponent } from '../../../../common/components/general-data/general-data.component';
-import { PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
-import { QuotationNoticeComponent } from '../../../../common/components/quotation-notice/quotation-notice.component';
-import { ParametersBoardComponent } from '../../../../common/components/parameters-board/parameters-board.component';
 import { SchoolDataComponent } from './components/school-data/school-data.component';
+import { PremiumScheduleComponent } from './components/premium-schedule/premium-schedule.component';
+import { CoveragesLimitsComponent } from '../../../../common/components/coverage-limits/coverage-limits.component';
 
 type CoverageGroup = FormGroup<{
   selected: FormControl<boolean>;
@@ -24,15 +21,13 @@ type CoverageGroup = FormGroup<{
 
 @Component({
     selector: 'app-schoolchildren-person-form',
+    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
         CoveragesLimitsComponent,
-        GeneralDataComponent,
-        PremiumSummaryComponent,
-        QuotationNoticeComponent,
-        ParametersBoardComponent,
-        SchoolDataComponent
+        SchoolDataComponent,
+        PremiumScheduleComponent,
     ],
     templateUrl: './schoolchildren-person-form.component.html',
     styleUrls: ['./schoolchildren-person-form.component.css'],
@@ -45,11 +40,11 @@ export class SchoolChildrenPersonFormComponent {
   netPremium = 0;
 
   readonly COVERAGES: CoverageDef[] = [
-    { name: 'Muerte Accidental',              kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Desmembramiento',                kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Incapacidad Total y Permanente', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Comp. Semanal',                  kind: 'tier', tiers: [  1500,   2000,   2500], suffix: 'DOP' },
-    { name: 'Gastos Médicos por Accidente',   kind: 'tier', tiers: [ 30000,  40000,  50000], suffix: 'DOP' },
+    { name: 'Muerte Accidental',               kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.18 },
+    { name: 'Desmembramiento',                 kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.09 },
+    { name: 'Incapacidad Total y Permanente',  kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.06 },
+    { name: 'Comp. Semanal',                   kind: 'tier', tiers: [1500,   2000,   2500  ], suffix: 'DOP', ratePct: 0.03 },
+    { name: 'Gastos Médicos por Accidente',    kind: 'tier', tiers: [30000,  40000,  50000 ], suffix: 'DOP', ratePct: 2.27 },
   ];
 
   schoolPersonForm = this.fb.group({
@@ -98,7 +93,6 @@ export class SchoolChildrenPersonFormComponent {
   onSubmit(): void {
     this.submitted = true;
     if (this.schoolPersonForm.invalid) return;
-    // Aquí podrías armar tu DTO o enviar los datos
   }
 
   get currency(): string {

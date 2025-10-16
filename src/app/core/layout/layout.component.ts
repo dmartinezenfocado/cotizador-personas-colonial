@@ -50,6 +50,7 @@ import { filter, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-layout',
+    standalone: true,
     templateUrl: './layout.component.html',
     styleUrls: ['./layout.component.scss'],
     imports: [HeaderComponent, SidenavComponent, RouterOutlet, NgbModule]

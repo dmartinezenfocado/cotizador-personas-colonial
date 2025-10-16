@@ -30,3 +30,10 @@
 .card-body .form-check-input { cursor: pointer; }
 .card-body .form-check-label { cursor: pointer; }
 
+.right-align {
+  text-align: right;
+  justify-content: flex-start;
+  display: flex; /* opcional si quieres controlar el alineado horizontal */
+}
+
+

@@ -5,6 +5,7 @@ import { Subscription, combineLatest } from 'rxjs';
 
 @Component({
     selector: 'app-insurance-data',
+    standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './insurance-data.component.html',
     styleUrls: ['./insurance-data.component.css'],

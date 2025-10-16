@@ -1,56 +1,109 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Subscription, combineLatest } from 'rxjs';
+import { Subject, Subscription, combineLatest, startWith, takeUntil } from 'rxjs';
 import { CoverageDef } from '../../../../core/data/models/coverage-def.model';
 import { CoveragesLimitsComponent } from '../../../../common/components/coverage-limits/coverage-limits.component';
 import { GeneralDataComponent } from '../../../../common/components/general-data/general-data.component';
 import { PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
-import { QuotationNoticeComponent } from '../../../../common/components/quotation-notice/quotation-notice.component';
-import { ParametersBoardComponent } from '../../../../common/components/parameters-board/parameters-board.component';
+import { Occupation, ParametersBoardComponent } from '../../../../common/components/parameters-board/parameters-board.component';
+import { OccupationService } from '../../../../core/data/services/occupations.service';
 
 type Category = 'I' | 'II' | 'III';
-interface Occupation { id: number; name: string; category: Category; }
 
 @Component({
-    selector: 'app-individual-person-form',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        CoveragesLimitsComponent,
-        GeneralDataComponent,
-        PremiumSummaryComponent,
-        QuotationNoticeComponent,
-        ParametersBoardComponent
-    ],
-    templateUrl: './individual-person-form.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-individual-person-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CoveragesLimitsComponent,
+    GeneralDataComponent,
+    PremiumSummaryComponent,
+    ParametersBoardComponent
+  ],
+  templateUrl: './individual-person-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IndividualPersonFormComponent implements OnInit, OnDestroy {
   submitted = false;
   netPremium = 0;
-  private sub?: Subscription;
+  baseTecnicaBruta = 1500;
+  occupations: Occupation[] = [];
+  private occSub?: Subscription;
   private subOpts?: Subscription;
+  private sub?: Subscription;
+  private destroy$ = new Subject<void>();
 
- 
-  occupations: Occupation[] = [
-    { id: 1, name: 'Albañiles', category: 'III' },
-    { id: 2, name: 'Ingenieros', category: 'I' },
-    { id: 3, name: 'Choferes', category: 'II' },
-  ];
+  constructor(
+    private fb: FormBuilder,
+    private occupationService: OccupationService,
+  ) { }
+
+  ngOnInit(): void {
+    this.loadOccupations();
+    this.setupAgeCalculation();
+    this.setupOccupationChange();
+    this.setupCategoryOptionsSync();
+
+  }
+
+  loadOccupations(): void {
+    this.occSub = this.occupationService.getAll().subscribe({
+      next: (data) => (this.occupations = data),
+      error: () => (this.occupations = [])
+    });
+  }
+
+  private setupAgeCalculation(): void {
+    const fnCtrl = this.individualPersonForm.get('fechaNacimiento');
+    const edadCtrl = this.individualPersonForm.get('edad');
+
+    if (fnCtrl && edadCtrl) {
+      this.sub = fnCtrl.valueChanges.subscribe((val) => {
+        const years = this.calcAge(val);
+        edadCtrl.setValue(Number.isFinite(years) ? years : 0, { emitEvent: false });
+      });
+    }
+  }
+
+  private setupOccupationChange(): void {
+    const ctrl = this.individualPersonForm.get('occupationId');
+    if (!ctrl) return;
+
+    ctrl.valueChanges
+      .pipe(
+        startWith(ctrl.value),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((id: number | null) => {
+        const occ = this.occupations.find(o => o.id === id) || null;
+        const cat = occ?.category ?? null;
+        this.individualPersonForm.get('category')?.setValue(cat, { emitEvent: false });
+      });
+  }
+  
+  private setupCategoryOptionsSync(): void {
+    this.subOpts = combineLatest([
+      this.individualPersonForm.get('optI')!.valueChanges,
+      this.individualPersonForm.get('optII')!.valueChanges,
+      this.individualPersonForm.get('optIII')!.valueChanges,
+    ]).subscribe(() => this.coerceCoverageAmountsToVisibleTiers());
+  }
+
   ageRanges: string[] = ['Hasta 55', '56 - 65', '66 - 70'];
 
   readonly COVERAGES: CoverageDef[] = [
-    { name: 'Muerte Accidental', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Desmembramiento', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Incapacidad Total y Permanente', kind:'tier', tiers: [300000, 400000, 500000], suffix: 'DOP' },
-    { name: 'Comp. Semanal', kind:'tier', tiers: [1500, 2000, 2500], suffix: 'DOP' },
-    { name: 'Gastos Médicos por Accidente', kind:'tier', tiers: [30000, 40000, 50000], suffix: 'DOP' }
+    { name: 'Muerte Accidental', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.18 },
+    { name: 'Desmembramiento', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.09 },
+    { name: 'Incapacidad Total y Permanente', kind: 'tier', tiers: [300000, 400000, 500000], suffix: 'DOP', ratePct: 0.06 },
+    { name: 'Comp. Semanal', kind: 'tier', tiers: [1500, 2000, 2500], suffix: 'DOP', ratePct: 0.03 },
+    { name: 'Gastos Médicos por Accidente', kind: 'tier', tiers: [30000, 40000, 50000], suffix: 'DOP', ratePct: 2.27 },
   ];
 
   individualPersonForm: FormGroup = this.fb.group({
-    clientName: [''],
-    intermediario: [''],
+    clientName: [null as number | null, Validators.required],
+    intermediario: [null as number | null, Validators.required],
     moneda: ['', Validators.required],
     formaPago: ['', Validators.required],
     cedula: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{7}-\d{1}$/)]],
@@ -69,36 +122,8 @@ export class IndividualPersonFormComponent implements OnInit, OnDestroy {
     ))
   });
 
-  constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {
-    const fnCtrl = this.individualPersonForm.get('fechaNacimiento');
-    const edadCtrl = this.individualPersonForm.get('edad');
-    if (fnCtrl && edadCtrl) {
-      this.sub = fnCtrl.valueChanges.subscribe((val) => {
-        const years = this.calcAge(val);
-        edadCtrl.setValue(Number.isFinite(years) ? years : 0, { emitEvent: false });
-      });
-    }
 
-    this.individualPersonForm.get('occupationId')!.valueChanges.subscribe((id: number | null) => {
-      const occ = this.occupations.find(o => o.id === id) || null;
-      const cat = occ?.category ?? null;
-      this.individualPersonForm.get('category')!.setValue(cat, { emitEvent: false });
-
-      const flags = { I: false, II: false, III: false } as Record<Category, boolean>;
-      if (cat) flags[cat] = true;
-      this.individualPersonForm.patchValue({ optI: flags.I, optII: flags.II, optIII: flags.III }, { emitEvent: false });
-
-      this.coerceCoverageAmountsToVisibleTiers();
-    });
-
-    this.subOpts = combineLatest([
-      this.individualPersonForm.get('optI')!.valueChanges,
-      this.individualPersonForm.get('optII')!.valueChanges,
-      this.individualPersonForm.get('optIII')!.valueChanges,
-    ]).subscribe(() => this.coerceCoverageAmountsToVisibleTiers());
-  }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -116,6 +141,21 @@ export class IndividualPersonFormComponent implements OnInit, OnDestroy {
     if (this.optII) arr.push(1);
     if (this.optIII) arr.push(2);
     return arr;
+  }
+
+  private findCoverageIndexByName(name: string): number {
+    return this.COVERAGES.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
+  }
+
+  private get isMuerteAccidentalSelected(): boolean {
+    const idx = this.findCoverageIndexByName('Muerte Accidental');
+    if (idx < 0) return true;
+    return !!(this.coverages.at(idx).get('selected')?.value);
+  }
+
+  get premiumVisibleTierIdxs(): number[] {
+    if (!this.isMuerteAccidentalSelected) return [];
+    return this.visibleTierIdxs;
   }
 
   onCoverageToggled(event: { index: number; selected: boolean }): void {
@@ -151,8 +191,8 @@ export class IndividualPersonFormComponent implements OnInit, OnDestroy {
       if (!selected) return;
 
       const visibleValues = (def.tiers ?? []).filter((_, idx) => this.visibleTierIdxs.includes(idx));
+
       if (!visibleValues.length) {
-        ctrl.get('amount')?.reset(null, { emitEvent: false });
         return;
       }
 
@@ -175,8 +215,14 @@ export class IndividualPersonFormComponent implements OnInit, OnDestroy {
   }
 
   get currency(): string {
-  const value = this.individualPersonForm.get('moneda')?.value;
-  return value === 'usd' ? 'US$' : 'RD$';
-}
+    const value = this.individualPersonForm.get('moneda')?.value;
+    return value === 'usd' ? 'US$' : 'RD$';
+  }
+
+  get enablePremium(): boolean {
+    const idx = this.findCoverageIndexByName('Muerte Accidental');
+    if (idx < 0) return true;
+    return !!(this.coverages.at(idx).get('selected')?.value);
+  }
 
 }

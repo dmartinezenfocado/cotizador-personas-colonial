@@ -1,18 +1,94 @@
-<div class="row mt-4">
-  <div class="col-12 col-md-6 offset-md-6">
-    <div class="d-flex justify-content-between">
-      <span class="fw-semibold">Prima Neta</span>
-      <span>{{ currency }} {{ net | number:'1.2-2' }}</span>
-    </div>
+<!-- <div class="premium-card">
+  <div class="header-row">
+    <div class="title">Prima</div>
+  </div>
 
-    <div class="d-flex justify-content-between">
-      <span class="fw-semibold">Impuestos ({{ (taxRate * 100) | number:'1.0-0' }}%)</span>
-      <span>{{ currency }} {{ tax | number:'1.2-2' }}</span>
+  <div class="row-line">
+    <div class="row-label">Prima Neta</div>
+    <div class="row-values">
+      <div class="cell" *ngFor="let _ of [].constructor(optionCount); let idx = index"
+           [class.disabled]="!isOptionEnabled(idx)">
+        <ng-container *ngIf="isOptionEnabled(idx); else dash1">
+          {{ net(idx) | number:'1.0-2' }}
+        </ng-container>
+        <ng-template #dash1>—</ng-template>
+      </div>
     </div>
+  </div>
 
-    <div class="d-flex justify-content-between">
-      <span class="fw-bold">Prima Total</span>
-      <span class="fw-bold">{{ currency }} {{ total | number:'1.2-2' }}</span>
+  <div class="row-line">
+    <div class="row-label">ISC ({{ iscPct }}%)</div>
+    <div class="row-values">
+      <div class="cell" *ngFor="let _ of [].constructor(optionCount); let idx = index"
+           [class.disabled]="!isOptionEnabled(idx)">
+        <ng-container *ngIf="isOptionEnabled(idx); else dash2">
+          {{ isc(idx) | number:'1.0-2' }}
+        </ng-container>
+        <ng-template #dash2>—</ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-line total">
+    <div class="row-label fw-semibold">Prima Total</div>
+    <div class="row-values">
+      <div class="cell fw-semibold" *ngFor="let _ of [].constructor(optionCount); let idx = index"
+           [class.disabled]="!isOptionEnabled(idx)">
+        <ng-container *ngIf="isOptionEnabled(idx); else dash3">
+          {{ total(idx) | number:'1.0-2' }}
+        </ng-container>
+        <ng-template #dash3>—</ng-template>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="premium-card">
+  <div class="header-row">
+    <div class="title">Prima</div>
+    <!-- <div class="options">
+      <div class="option-head" *ngFor="let _ of [].constructor(optionCount); let i = index"
+           [class.disabled]="!isOptionEnabled(i)">
+        Opción {{ i + 1 }}
+      </div>
+    </div> -->
+  </div>
+
+  <div class="row-line">
+    <div class="row-label">Prima Neta</div>
+    <div class="row-values">
+      <div class="cell" *ngFor="let _ of [].constructor(optionCount); let i = index"
+           [class.disabled]="!isOptionEnabled(i)">
+        <ng-container *ngIf="isOptionEnabled(i) && enablePremium; else dash1">
+          {{ net(i) | number:'1.0-2' }}
+        </ng-container>
+        <ng-template #dash1>—</ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-line">
+    <div class="row-label">ISC ({{ iscPct }}%)</div>
+    <div class="row-values">
+      <div class="cell" *ngFor="let _ of [].constructor(optionCount); let i = index"
+           [class.disabled]="!isOptionEnabled(i)">
+        <ng-container *ngIf="isOptionEnabled(i) && enablePremium; else dash2">
+          {{ isc(i) | number:'1.0-2' }}
+        </ng-container>
+        <ng-template #dash2>—</ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="row-line total">
+    <div class="row-label fw-semibold">Prima Total</div>
+    <div class="row-values">
+      <div class="cell fw-semibold" *ngFor="let _ of [].constructor(optionCount); let i = index"
+           [class.disabled]="!isOptionEnabled(i)">
+        <ng-container *ngIf="isOptionEnabled(i) && enablePremium; else dash3">
+          {{ total(i) | number:'1.0-2' }}
+        </ng-container>
+        <ng-template #dash3>—</ng-template>
+      </div>
     </div>
   </div>
 </div>

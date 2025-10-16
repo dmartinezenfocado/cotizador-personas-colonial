@@ -4,6 +4,7 @@ import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-applicant-data',
+    standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './applicant-data.component.html',
     styleUrls: ['./applicant-data.component.css'],

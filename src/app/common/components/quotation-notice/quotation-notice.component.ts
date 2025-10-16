@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-quotation-notice',
+    standalone: true,
     imports: [CommonModule],
     templateUrl: './quotation-notice.component.html',
     styleUrls: ['./quotation-notice.component.css'],

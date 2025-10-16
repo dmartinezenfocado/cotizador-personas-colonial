@@ -4,5 +4,6 @@ export interface CoverageDef {
   name: string;
   kind: CoverageKind;
   tiers?: number[];  
-  suffix?: string;    
+  suffix?: string;  
+  ratePct: number;  
 }

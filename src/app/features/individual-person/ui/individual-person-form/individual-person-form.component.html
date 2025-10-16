@@ -17,20 +17,22 @@
           <app-coverages-limits
             [definitions]="COVERAGES"
             [coveragesFA]="coverages"
-            (coverageToggled)="onCoverageToggled($event)"
-            [visibleTierIdxs]="visibleTierIdxs" >
+            [visibleTierIdxs]="visibleTierIdxs"
+            (coverageToggled)="onCoverageToggled($event)">
           </app-coverages-limits>
           <div class="row mt-4">
             <div class="col-12 col-md-6 offset-md-6">
               <app-premium-summary
-                [net]="netPremium"
-                [taxRate]="0.16"
-                [currency]="currency">
+                [definitions]="COVERAGES"
+                [coveragesFA]="coverages"
+                [iscPct]="16"
+                [baseTecnicaBruta]="baseTecnicaBruta"
+                [visibleTierIdxs]="premiumVisibleTierIdxs"
+                [enablePremium]="enablePremium">
               </app-premium-summary>
             </div>
           </div>
         </div>
-        <!-- <app-quotation-notice></app-quotation-notice> -->
       </div>
     </div>
     <div class="col-12 col-lg-4">

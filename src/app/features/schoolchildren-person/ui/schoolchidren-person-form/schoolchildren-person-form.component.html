@@ -1,5 +1,5 @@
 <form [formGroup]="schoolPersonForm" novalidate autocomplete="off">
-  <div class="row g-4 align-items-start">
+  <div class="row g-4 justify-content-center">
     <div class="col-12 col-lg-8">
       <div class="card shadow-sm rounded-4 overflow-hidden h-100">
         <div class="card-header bg-white py-3">
@@ -9,20 +9,37 @@
         </div>
 
         <div class="card-body border-0">
-          <app-school-data
-            [form]="schoolPersonForm"
-            [submitted]="submitted">
+          <app-school-data [form]="schoolPersonForm" [submitted]="submitted">
           </app-school-data>
         </div>
 
-        <!-- <div class="card-body border-0">
-          <app-coverages-limits
-            [definitions]="COVERAGES"
-            [coveragesFA]="coverages"
-            [visibleTierIdxs]="visibleTierIdxs"
+        <div class="card-body border-0">
+          <app-coverages-limits [definitions]="COVERAGES" [coveragesFA]="coverages"
             (coverageToggled)="onCoverageToggled($event)">
-          </app-coverages-limits> -->
+          </app-coverages-limits>
+        </div>
 
+        <div class="card-body border-0 d-flex justify-content-end">
+          <app-premium-schedule [sections]="[
+          { title: 'Horario Escolar', rows: [
+            { label:'Prima por Estudiante', values:[117.80,176.70,235.60] },
+            { label:'Prima por Profesor',   values:[331.23,496.85,662.47] }
+          ]},
+          { title: 'Horario 24 horas', rows: [
+            { label:'Prima por Estudiante', values:[130.20,195.30,260.40] },
+            { label:'Prima por Profesor',   values:[366.10,549.15,732.20] }
+          ]}
+        ]">
+          </app-premium-schedule>
+        </div>
+       
+      <div class="row justify-content-end">
+        <div class="col-3">
+          <button class="btn btn-dark bg-colonial border-0 w-100 my-3 btn-lg rounded-3 justify-content-center" type="submit">
+            Enviar
+          </button>
+        </div>
+      </div>
       </div>
     </div>
   </div>

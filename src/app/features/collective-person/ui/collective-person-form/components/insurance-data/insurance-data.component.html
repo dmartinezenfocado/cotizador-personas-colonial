@@ -1,51 +1,33 @@
 <div [formGroup]="form">
   <h5 class="fw-bold border-bottom pb-2 mb-3">Datos del Seguro</h5>
-
   <div class="row g-3">
     <div class="col-md-6">
       <label class="form-label" for="inicioVigencia">Inicio Vigencia</label>
-      <input id="inicioVigencia"
-             class="form-control"
-             type="date"
-             formControlName="inicioVigencia"
-             [class.is-invalid]="(submitted || form.get('inicioVigencia')?.touched) && form.get('inicioVigencia')?.invalid" />
+      <input id="inicioVigencia" class="form-control" type="date" formControlName="inicioVigencia"
+        [class.is-invalid]="(submitted || form.get('inicioVigencia')?.touched) && form.get('inicioVigencia')?.invalid" />
     </div>
-
     <div class="col-md-6">
       <label class="form-label" for="finVigencia">Fin Vigencia</label>
-      <input id="finVigencia"
-             class="form-control"
-             type="date"
-             formControlName="finVigencia"
-             [class.is-invalid]="(submitted || form.get('finVigencia')?.touched) && form.get('finVigencia')?.invalid" />
+      <input id="finVigencia" class="form-control" type="date" formControlName="finVigencia"
+        [class.is-invalid]="(submitted || form.get('finVigencia')?.touched) && form.get('finVigencia')?.invalid" />
     </div>
-
     <div class="col-md-6">
       <label class="form-label" for="moneda">Moneda</label>
-      <select id="moneda"
-              class="form-select"
-              formControlName="moneda"
-              [class.is-invalid]="(submitted || form.get('moneda')?.touched) && form.get('moneda')?.invalid">
+      <select id="moneda" class="form-select" formControlName="moneda"
+        [class.is-invalid]="(submitted || form.get('moneda')?.touched) && form.get('moneda')?.invalid">
         <option value="">Seleccione la moneda</option>
         <option value="dop">DOP</option>
         <option value="usd">USD</option>
       </select>
     </div>
-
     <div class="col-md-6">
       <label class="form-label" for="cantidadDias">Cantidad de días</label>
-      <input id="cantidadDias"
-             class="form-control"
-             formControlName="cantidadDias"
-             type="number" min="0" readonly />
+      <input id="cantidadDias" class="form-control" formControlName="cantidadDias" type="number" min="0" readonly />
     </div>
-
     <div class="col-md-6">
       <label class="form-label" for="cantidadAsegurados">Cantidad de Asegurados</label>
-      <input id="cantidadAsegurados"
-             class="form-control"
-             formControlName="cantidadAsegurados"
-             type="number" min="0" readonly />
+      <input id="cantidadAsegurados" class="form-control" formControlName="cantidadAsegurados" type="number" min="0"
+        readonly />
     </div>
   </div>
 </div>

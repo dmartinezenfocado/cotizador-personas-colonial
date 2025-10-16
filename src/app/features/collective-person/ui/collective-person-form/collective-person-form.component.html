@@ -32,16 +32,17 @@
 
           <div class="row mt-4">
             <div class="col-12 col-md-6 offset-md-6">
-              <app-premium-summary
-                [net]="netPremium"
-                [taxRate]="0.16"
-                [currency]="currency">
+             <app-premium-summary
+                [definitions]="COVERAGES"
+                [coveragesFA]="coverages"
+                [iscPct]="16"
+                [baseTecnicaBruta]="baseTecnicaBruta"
+                [visibleTierIdxs]="premiumVisibleTierIdxs"
+                [enablePremium]="enablePremium">
               </app-premium-summary>
             </div>
           </div>
         </div>
-
-        <app-quotation-notice></app-quotation-notice>
       </div>
     </div>
 

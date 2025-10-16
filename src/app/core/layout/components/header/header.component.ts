@@ -4,6 +4,7 @@ import { SidenavComponent } from '../sidenav/sidenav.component';
 
 @Component({
     selector: 'app-header',
+    standalone: true,
     imports: [NgbModule],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']

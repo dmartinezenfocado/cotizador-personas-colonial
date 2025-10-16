@@ -1,0 +1,18 @@
+<div class="premium-card" role="table" aria-label="Tabla de primas por horario">
+  <ng-container *ngFor="let section of sections; let sIdx = index">
+    <div class="section" role="rowgroup">
+      <h6 class="section-title" role="rowheader">{{ section.title }}</h6>
+
+      <div class="row" role="row" *ngFor="let r of section.rows">
+        <div class="cell label" role="cell">{{ r.label }}</div>
+
+        <div class="cell value" role="cell" *ngFor="let v of r.values">
+          {{ format(v) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador visual entre secciones -->
+    <div class="spacer" *ngIf="sIdx < sections.length - 1"></div>
+  </ng-container>
+</div>
