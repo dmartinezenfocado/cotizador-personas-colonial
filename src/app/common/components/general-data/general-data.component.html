@@ -1,101 +1,89 @@
 <div [formGroup]="form()">
   <h5 class="fw-bold border-bottom pb-2 mb-3">Datos Generales</h5>
   <div class="row g-3">
-    <div class="col-md-6">
-      <label class="form-label" for="clientName">Cliente</label>
-      <select
-        id="clientName"
-        class="form-select"
-        formControlName="clientName"
-        [disabled]="loadingClients"
-        [class.is-invalid]="(submitted() || f['clientName'].touched) && f['clientName'].invalid">
-        <option [ngValue]="null">Seleccione un cliente</option>
 
-        @for (c of clients; track c.id) {
-          <option [ngValue]="c.id">
-            {{ c.name }}
-          </option>
-        }
-      </select>
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="intermediario">Intermediario</label>
-      <select
-        id="intermediario"
-        class="form-select"
-        formControlName="intermediario"
-        [disabled]="loadingIntermediarios"
-        [class.is-invalid]="(submitted() || f['intermediario'].touched) && f['intermediario'].invalid">
-        <option [ngValue]="null">Seleccione un intermediario</option>
-        @for (i of intermediarios; track i.id) {
-          <option [ngValue]="i.id">
-            {{ i.name }}
-          </option>
-        }
-      </select>
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="moneda">Moneda</label>
-      <select
-        id="moneda"
-        class="form-select"
-        formControlName="moneda"
-        [class.is-invalid]="(submitted() || f['moneda'].touched) && f['moneda'].invalid">
-        <option value="">Seleccione la moneda</option>
-        <option value="dop">DOP</option>
-        <option value="usd">USD</option>
-      </select>
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="formaPago">Forma de Pago</label>
-      <select
-        id="formaPago"
-        class="form-select"
-        formControlName="formaPago"
-        [class.is-invalid]="(submitted() || f['formaPago'].touched) && f['formaPago'].invalid">
-        <option value="">Seleccione la forma de pago</option>
-        <option value="anual">Anual</option>
-        <option value="mensual">Mensual</option>
-        <option value="trimestral">Trimestral</option>
-      </select>
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="cedula">No. Cédula</label>
-      <input
-        id="cedula"
-        class="form-control"
-        formControlName="cedula"
-        type="text"
-        placeholder="000-0000000-0"
-        [class.is-invalid]="(submitted() || f['cedula'].touched) && f['cedula'].invalid" />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="fecha">Fecha</label>
-      <input
-        id="fecha"
-        class="form-control"
-        formControlName="fecha"
-        type="date"
-        [class.is-invalid]="(submitted() || f['fecha'].touched) && f['fecha'].invalid" />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="fechaNacimiento">Fecha de Nacimiento</label>
-      <input
-        id="fechaNacimiento"
-        class="form-control"
-        formControlName="fechaNacimiento"
-        type="date"
-        [class.is-invalid]="(submitted() || f['fechaNacimiento'].touched) && f['fechaNacimiento'].invalid" />
-    </div>
-    <div class="col-md-6">
-      <label class="form-label" for="edad">Edad</label>
-      <input
-        id="edad"
-        class="form-control"
-        formControlName="edad"
-        type="number"
-        min="0"
-        readonly />
-    </div>
+    @if ((config().showCliente ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="clientName">Cliente</label>
+        <select id="clientName" class="form-select" formControlName="clientName"
+                [disabled]="loadingClients"
+                [class.is-invalid]="(submitted() || f['clientName'].touched) && f['clientName'].invalid">
+          <option [ngValue]="null">Seleccione un cliente</option>
+          @for (c of clients; track c.id) {
+            <option [ngValue]="c.id">{{ c.name }}</option>
+          }
+        </select>
+      </div>
+    }
+
+    @if ((config().showIntermediario ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="intermediary">Intermediario</label>
+        <select id="intermediary" class="form-select" formControlName="intermediary"
+                [disabled]="loadingIntermediarios"
+                [class.is-invalid]="(submitted() || f['intermediary'].touched) && f['intermediary'].invalid">
+          <option [ngValue]="null">Seleccione un intermediario</option>
+          @for (i of intermediarios; track i.id) {
+            <option [ngValue]="i.id">{{ i.name }}</option>
+          }
+        </select>
+      </div>
+    }
+
+    @if ((config().showMoneda ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="currency">Moneda</label>
+        <select id="currency" class="form-select" formControlName="currency"
+                [class.is-invalid]="(submitted() || f['currency'].touched) && f['currency'].invalid">
+          <option value="">Seleccione la moneda</option>
+          <option value="dop">DOP</option>
+          <option value="usd">USD</option>
+        </select>
+      </div>
+    }
+
+    @if ((config().showFormaPago ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="paymentMethod">Forma de Pago</label>
+        <select id="paymentMethod" class="form-select" formControlName="formaPago"
+                [class.is-invalid]="(submitted() || f['paymentMethod'].touched) && f['paymentMethod'].invalid">
+          <option value="">Seleccione la forma de pago</option>
+          <option value="anual">Anual</option>
+          <option value="mensual">Mensual</option>
+          <option value="trimestral">Trimestral</option>
+        </select>
+      </div>
+    }
+
+    @if ((config().showDocumento ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="documento">
+          {{ (config().docType ?? 'cedula') === 'cedula' ? 'No. Cédula' : 'RNC' }}
+        </label>
+        <input id="identification" class="form-control" formControlName="identification" type="text"
+               [placeholder]="(config().docType ?? 'identification') === 'cedula' ? '000-0000000-0' : '#########'"
+               [class.is-invalid]="(submitted() || f['identification'].touched) && f['identification'].invalid"/>
+      </div>
+    }
+
+    @if ((config().showFecha ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="date">Fecha</label>
+        <input id="date" class="form-control" formControlName="date" type="date"
+               [class.is-invalid]="(submitted() || f['date'].touched) && f['date'].invalid"/>
+      </div>
+    }
+
+    @if ((config().showFechaNacimiento ?? true)) {
+      <div class="col-md-6">
+        <label class="form-label" for="dateBirth">Fecha de Nacimiento</label>
+        <input id="dateBirth" class="form-control" formControlName="fechaNacimiento" type="date"
+               [class.is-invalid]="(submitted() || f['dateBirth'].touched) && f['dateBirth'].invalid"/>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="age">Edad</label>
+        <input id="age" class="form-control" formControlName="age" type="number" min="0" readonly />
+      </div>
+    }
   </div>
 </div>

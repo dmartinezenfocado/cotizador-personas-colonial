@@ -10,8 +10,19 @@
         <div class="card-body border-0">
           <app-general-data
             [form]="individualPersonForm"
-            [submitted]="submitted">
-          </app-general-data>
+            [submitted]="submitted"
+            [config]="{
+            docType: 'cedula',
+            showCliente: true,        requireCliente: true,
+            showIntermediario: true,  requireIntermediario: true,
+            showMoneda: true,         requireMoneda: true,
+            showFormaPago: true,      requireFormaPago: true,
+            showFecha: true,          requireFecha: true,
+            showDocumento: true,      requireDocumento: true,
+            showFechaNacimiento: true,requireFechaNacimiento: true,
+            autoEdad: true
+          }"
+        />
         </div>
         <div class="card-body border-0">
           <app-coverages-limits

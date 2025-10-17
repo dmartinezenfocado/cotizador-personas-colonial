@@ -8,10 +8,21 @@
           </h3>
         </div>
         <div class="card-body border-0">
-          <app-applicant-data
+          <app-general-data
             [form]="collectivePersonForm"
-            [submitted]="submitted">
-          </app-applicant-data>
+            [submitted]="submitted"
+            [config]="{
+              docType: 'rnc',
+              showCliente: true,        requireCliente: true,
+              showIntermediario: true,  requireIntermediario: true,
+              showFecha: true,          requireFecha: true,
+              showDocumento: true,      requireDocumento: true,
+              showMoneda: false,
+              showFormaPago: false,
+              showFechaNacimiento: false,
+              autoEdad: false
+            }"
+          />
         </div>
         <div class="card-body border-0">
           <app-insurance-data

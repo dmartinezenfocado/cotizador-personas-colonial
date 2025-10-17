@@ -1,56 +1,7 @@
 <!-- <div class="premium-card">
   <div class="header-row">
     <div class="title">Prima</div>
-  </div>
 
-  <div class="row-line">
-    <div class="row-label">Prima Neta</div>
-    <div class="row-values">
-      <div class="cell" *ngFor="let _ of [].constructor(optionCount); let idx = index"
-           [class.disabled]="!isOptionEnabled(idx)">
-        <ng-container *ngIf="isOptionEnabled(idx); else dash1">
-          {{ net(idx) | number:'1.0-2' }}
-        </ng-container>
-        <ng-template #dash1>—</ng-template>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-line">
-    <div class="row-label">ISC ({{ iscPct }}%)</div>
-    <div class="row-values">
-      <div class="cell" *ngFor="let _ of [].constructor(optionCount); let idx = index"
-           [class.disabled]="!isOptionEnabled(idx)">
-        <ng-container *ngIf="isOptionEnabled(idx); else dash2">
-          {{ isc(idx) | number:'1.0-2' }}
-        </ng-container>
-        <ng-template #dash2>—</ng-template>
-      </div>
-    </div>
-  </div>
-
-  <div class="row-line total">
-    <div class="row-label fw-semibold">Prima Total</div>
-    <div class="row-values">
-      <div class="cell fw-semibold" *ngFor="let _ of [].constructor(optionCount); let idx = index"
-           [class.disabled]="!isOptionEnabled(idx)">
-        <ng-container *ngIf="isOptionEnabled(idx); else dash3">
-          {{ total(idx) | number:'1.0-2' }}
-        </ng-container>
-        <ng-template #dash3>—</ng-template>
-      </div>
-    </div>
-  </div>
-</div> -->
-<div class="premium-card">
-  <div class="header-row">
-    <div class="title">Prima</div>
-    <!-- <div class="options">
-      <div class="option-head" *ngFor="let _ of [].constructor(optionCount); let i = index"
-           [class.disabled]="!isOptionEnabled(i)">
-        Opción {{ i + 1 }}
-      </div>
-    </div> -->
   </div>
 
   <div class="row-line">
@@ -89,6 +40,59 @@
         </ng-container>
         <ng-template #dash3>—</ng-template>
       </div>
+    </div>
+  </div>
+</div> -->
+<div class="premium-card">
+  <div class="header-row">
+    <div class="title">Prima</div>
+  </div>
+
+  <!-- Prima Neta -->
+  <div class="row-line">
+    <div class="row-label">Prima Neta</div>
+    <div class="row-values">
+      @for (_ of [].constructor(optionCount); track $index; let i = $index) {
+        <div class="cell" [class.disabled]="!isOptionEnabled(i)">
+          @if (isOptionEnabled(i) && enablePremium()) {
+            {{ net(i) | number:'1.0-2' }}
+          } @else {
+            —
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ISC -->
+  <div class="row-line">
+    <div class="row-label">ISC ({{ iscPct() }}%)</div>
+    <div class="row-values">
+      @for (_ of [].constructor(optionCount); track $index; let i = $index) {
+        <div class="cell" [class.disabled]="!isOptionEnabled(i)">
+          @if (isOptionEnabled(i) && enablePremium()) {
+            {{ isc(i) | number:'1.0-2' }}
+          } @else {
+            —
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Prima Total -->
+  <div class="row-line total">
+    <div class="row-label fw-semibold">Prima Total</div>
+    <div class="row-values">
+      @for (_ of [].constructor(optionCount); track $index; let i = $index) {
+        <div class="cell fw-semibold" [class.disabled]="!isOptionEnabled(i)">
+          @if (isOptionEnabled(i) && enablePremium()) {
+            {{ total(i) | number:'1.0-2' }}
+          } @else {
+            —
+          }
+        </div>
+      }
     </div>
   </div>
 </div>

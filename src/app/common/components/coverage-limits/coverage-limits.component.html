@@ -5,7 +5,6 @@
       <div class="th th-cob">Cobertura</div>
       <div class="th th-montos">Montos Asegurados</div>
     </div>
-
     <div class="tbody">
       @let defs = definitions();
       @let vIdxs = visibleTierIdxs();
@@ -14,45 +13,92 @@
         <div class="tr" [formGroup]="getGroup(i)">
           <div class="td td-cob">
             <div class="form-check m-0">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                formControlName="selected"
-                (change)="onToggle(i)"
-                [id]="'cov_'+i"
-              />
-              <label class="form-check-label fw-semibold ms-2" [for]="'cov_'+i">
+              @if (showChecks()) {
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  formControlName="selected"
+                  (change)="onToggle(i)"
+                  [id]="'cov_'+i"
+                />
+              }
+              <label
+                class="form-check-label fw-semibold ms-2"
+                [attr.for]="showChecks() ? 'cov_'+i : null">
                 {{ defs[i]?.name }}
               </label>
             </div>
           </div>
-
           <div class="td td-montos">
             @if (defs[i]?.kind === 'tier') {
               <div class="montos-grid">
-                @for (t of (defs[i]?.tiers || []); track $index; let ti = $index) {
-                  <div class="monto-celda" [class.disabled]="!vIdxs.includes(ti)">
-                    @if (isSelected(i) && vIdxs.includes(ti)) {
-                      {{ t | number:'1.0-2' }}
-                    } @else {
-                      —
-                    }
+                @if (isEdgeEditable(i)) {
+                  <div class="monto-celda monto-celda--editable">
+                    <input
+                      type="text" inputmode="numeric"
+                      class="monto-celda-input"
+                      [value]="formatAmount(getAmountValue(i, 0))"
+                      placeholder="0"
+                      (input)="onAmountInput(i, 0, $event)" />
                   </div>
+                  <div class="monto-celda monto-celda--editable">
+                    <input
+                      type="text" inputmode="numeric"
+                      class="monto-celda-input"
+                      [value]="formatAmount(getAmountValue(i, 1))"
+                      placeholder="0"
+                      (input)="onAmountInput(i, 1, $event)" />
+                  </div>
+                  <div class="monto-celda monto-celda--editable">
+                    <input
+                      type="text" inputmode="numeric"
+                      class="monto-celda-input"
+                      [value]="formatAmount(getAmountValue(i, 2))"
+                      placeholder="0"
+                      (input)="onAmountInput(i, 2, $event)" />
+                  </div>
+                } @else {
+                  @for (t of (defs[i]?.tiers || []); track $index; let ti = $index) {
+                    <div class="monto-celda" [class.disabled]="!vIdxs.includes(ti)">
+                      @if (isRowEnabled(i) && vIdxs.includes(ti)) {
+                        {{ getDisplayTier(i, ti, t) | number:'1.0-0' }}
+                      } @else {
+                        —
+                      }
+                    </div>
+                  }
                 }
               </div>
             } @else {
-              <div class="free-input">
-                <input
-                  type="number"
-                  class="form-control text-center"
-                  formControlName="amount"
-                  [disabled]="!isSelected(i)"
-                  min="0"
-                  step="1"
-                  placeholder="Monto"
-                />
-                <span class="suffix">{{ defs[i]?.suffix || '' }}</span>
+              <div class="montos-grid">
+                @if (isEdgeEditable(i)) {
+                  <div class="monto-celda monto-celda--editable">
+                    <input type="text" inputmode="numeric" class="monto-celda-input"
+                           [value]="formatAmount(getAmountValue(i, 0))"
+                           placeholder="0"
+                           (input)="onAmountInput(i, 0, $event)" />
+                  </div>
+                  <div class="monto-celda monto-celda--editable">
+                    <input type="text" inputmode="numeric" class="monto-celda-input"
+                           [value]="formatAmount(getAmountValue(i, 1))"
+                           placeholder="0"
+                           (input)="onAmountInput(i, 1, $event)" />
+                  </div>
+                  <div class="monto-celda monto-celda--editable">
+                    <input type="text" inputmode="numeric" class="monto-celda-input"
+                           [value]="formatAmount(getAmountValue(i, 2))"
+                           placeholder="0"
+                           (input)="onAmountInput(i, 2, $event)" />
+                  </div>
+                } @else {
+                  <div class="monto-celda">—</div>
+                  <div class="monto-celda">—</div>
+                  <div class="monto-celda">—</div>
+                }
               </div>
+              @if (defs[i]?.suffix) {
+                <span class="suffix ms-2">{{ defs[i]?.suffix }}</span>
+              }
             }
           </div>
         </div>

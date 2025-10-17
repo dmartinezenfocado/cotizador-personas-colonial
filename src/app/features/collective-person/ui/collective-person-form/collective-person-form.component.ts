@@ -1,14 +1,17 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Subscription, combineLatest } from 'rxjs';
+import { Subject, Subscription, combineLatest, startWith, takeUntil } from 'rxjs';
 import { CoverageDef } from '../../../../core/data/models/coverage-def.model';
 import { CoveragesLimitsComponent } from '../../../../common/components/coverage-limits/coverage-limits.component';
-import { PremiumCalcContext, PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
+import { PremiumSummaryComponent } from '../../../../common/components/premium-summary/premium-summary.component';
 import { ParametersBoardComponent } from '../../../../common/components/parameters-board/parameters-board.component';
 import { ApplicantDataComponent } from './components/applicant-data/applicant-data.component';
 import { InsuranceDataComponent } from './components/insurance-data/insurance-data.component';
 import { ShortTermRateComponent } from './components/short-term-rate/short-term-rate.component';
+import { PremiumCalcContext } from '../../../../core/data/models/premium-calc-context.model';
+import { GeneralDataComponent } from '../../../../common/components/general-data/general-data.component';
+import { OccupationService } from '../../../../core/data/services/occupations.service';
 
 type Category = 'I' | 'II' | 'III';
 interface Occupation { id: number; name: string; category: Category; }
@@ -20,7 +23,7 @@ interface Occupation { id: number; name: string; category: Category; }
         CommonModule,
         ReactiveFormsModule,
         CoveragesLimitsComponent,
-        ApplicantDataComponent,
+        GeneralDataComponent,
         InsuranceDataComponent,
         PremiumSummaryComponent,
         ParametersBoardComponent,
@@ -33,15 +36,16 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
   submitted = false;
   netPremium = 0;
   baseTecnicaBruta = 15000;
+  occupations: Occupation[] = [];
   private sub?: Subscription;
   private subOpts?: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
- 
-  occupations: Occupation[] = [
-    { id: 1, name: 'Albañiles', category: 'III' },
-    { id: 2, name: 'Ingenieros', category: 'I' },
-    { id: 3, name: 'Choferes', category: 'II' },
-  ];
+  constructor(
+    private fb: FormBuilder, 
+    private occupationService: OccupationService,
+  ) { }
+
   ageRanges: string[] = ['Hasta 55', '56 - 65', '66 - 70'];
 
   readonly COVERAGES: CoverageDef[] = [
@@ -52,71 +56,43 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
     { name: 'Gastos Médicos por Accidente', kind: 'tier', tiers: [25000, 40000, 50000], suffix: 'DOP', ratePct: 2.27 },
   ];
 
-
- collectivePersonForm: FormGroup = this.fb.group({
-  clientName: [''],
-  intermediario: [''],
-  moneda: ['', Validators.required],
-  formaPago: ['', Validators.required],
-  RNC: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{7}-\d{1}$/)]],
-  fecha: ['', Validators.required],             
-  fechaNacimiento: ['', Validators.required],
-  edad: [{ value: 0, disabled: true }],
-  occupationId: [null as number | null, Validators.required],
-  ageRange: [null as string | null, Validators.required],
-  category: [{ value: null as Category | null, disabled: true }],
-  optI: [false],
-  optII: [false],
-  optIII: [false],
-  inicioVigencia: ['', Validators.required],
-  finVigencia: ['', Validators.required],
-  cantidadDias: [{ value: 0, disabled: false }],
-  cantidadAsegurados: [{ value: 100, disabled: false }],
-  shortTermFactor: [0.35],   // AH6
-  exentoY12: [false], 
-
-
-  coverages: this.fb.array(this.COVERAGES.map(() =>
-    this.fb.group({ selected: [false], amount: [null] })
-  ))
-});
-
-
-  constructor(private fb: FormBuilder) {}
-
   ngOnInit(): void {
-    const fnCtrl = this.collectivePersonForm.get('fechaNacimiento');
-    const edadCtrl = this.collectivePersonForm.get('edad');
-    if (fnCtrl && edadCtrl) {
-      this.sub = fnCtrl.valueChanges.subscribe((val) => {
-        const years = this.calcAge(val);
-        edadCtrl.setValue(Number.isFinite(years) ? years : 0, { emitEvent: false });
-      });
-    }
-
-    this.collectivePersonForm.get('occupationId')!.valueChanges.subscribe((id: number | null) => {
-      const occ = this.occupations.find(o => o.id === id) || null;
-      const cat = occ?.category ?? null;
-      this.collectivePersonForm.get('category')!.setValue(cat, { emitEvent: false });
-
-      const flags = { I: false, II: false, III: false } as Record<Category, boolean>;
-      if (cat) flags[cat] = true;
-      this.collectivePersonForm.patchValue({ optI: flags.I, optII: flags.II, optIII: flags.III }, { emitEvent: false });
-
-      this.coerceCoverageAmountsToVisibleTiers();
-    });
-
-    this.subOpts = combineLatest([
-      this.collectivePersonForm.get('optI')!.valueChanges,
-      this.collectivePersonForm.get('optII')!.valueChanges,
-      this.collectivePersonForm.get('optIII')!.valueChanges,
-    ]).subscribe(() => this.coerceCoverageAmountsToVisibleTiers());
+    this.getOccupations();
+    this.wireCategoryFromOccupation();
+    this.wireTierVisibilityCoercion();
   }
 
-  ngOnDestroy(): void {
+    ngOnDestroy(): void {
     this.sub?.unsubscribe();
     this.subOpts?.unsubscribe();
   }
+
+
+  collectivePersonForm: FormGroup = this.fb.group({
+    clientName: [null as number | null, Validators.required],
+    intermediary: [null as number | null, Validators.required],
+    currency: ['', Validators.required],
+    paymentMethod: ['', Validators.required],
+    identification: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{7}-\d{1}$/)]],
+    date: ['', Validators.required],
+    dateBirth: ['', Validators.required],
+    age: [{ value: 0, disabled: true }],
+    occupationId: [null as number | null, Validators.required],
+    ageRange: [null as string | null, Validators.required],
+    category: [{ value: null as Category | null, disabled: true }],
+    optI: [false],
+    optII: [false],
+    optIII: [false],
+    inicioVigencia: ['', Validators.required],
+    finVigencia: ['', Validators.required],
+    cantidadDias: [{ value: 0, disabled: false }],
+    cantidadAsegurados: [{ value: 100, disabled: false }],
+    shortTermFactor: [0.35],   // AH6
+    exentoY12: [false],
+    coverages: this.fb.array(this.COVERAGES.map(() =>
+      this.fb.group({ selected: [false], amount: [null] })
+    ))
+  });
 
   get coverages(): FormArray { return this.collectivePersonForm.get('coverages') as FormArray; }
   get optI(): boolean { return !!this.collectivePersonForm.get('optI')!.value; }
@@ -129,6 +105,42 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
     if (this.optII) arr.push(1);
     if (this.optIII) arr.push(2);
     return arr;
+  }
+
+   private getOccupations(): void {
+      this.occupationService.getAll()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (data) => (this.occupations = data ?? []),
+          error: () => (this.occupations = [])
+        });
+    }
+
+  private wireCategoryFromOccupation(): void {
+    const occCtrl = this.collectivePersonForm.get('occupationId');
+    const catCtrl = this.collectivePersonForm.get('category');
+    if (!occCtrl || !catCtrl) return;
+
+    occCtrl.valueChanges
+      .pipe(startWith(occCtrl.value), takeUntil(this.destroy$))
+      .subscribe((id: number | null) => {
+        const occ = this.occupations.find(o => o.id === id) ?? null;
+        catCtrl.setValue(occ?.category ?? null, { emitEvent: false });
+      });
+  }
+
+  private wireTierVisibilityCoercion(): void {
+    const optI = this.collectivePersonForm.get('optI')!;
+    const optII = this.collectivePersonForm.get('optII')!;
+    const optIII = this.collectivePersonForm.get('optIII')!;
+
+    combineLatest([
+      optI.valueChanges.pipe(startWith(optI.value)),
+      optII.valueChanges.pipe(startWith(optII.value)),
+      optIII.valueChanges.pipe(startWith(optIII.value)),
+    ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.coerceCoverageAmountsToVisibleTiers());
   }
 
   onCoverageToggled(event: { index: number; selected: boolean }): void {
@@ -176,17 +188,6 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  private calcAge(value: unknown): number | null {
-    if (!value) return null;
-    const birth = new Date(value as string);
-    if (isNaN(birth.getTime())) return null;
-    const today = new Date();
-    let years = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) years--;
-    return years >= 0 ? years : 0;
-  }
-
   get currency(): string {
     const value = this.collectivePersonForm.get('moneda')?.value;
     return value === 'usd' ? 'US$' : 'RD$';
@@ -210,7 +211,6 @@ export class CollectivePersonFormComponent implements OnInit, OnDestroy {
     if (!this.isMuerteAccidentalSelected) return [];
     return this.visibleTierIdxs;
   }
-
 
 computeNetColectivo = (ctx: PremiumCalcContext, opt: number): number => {
   if (!ctx.visibleTierIdxs.includes(opt) || !ctx.enablePremium) return 0;

@@ -1,14 +1,10 @@
-import {ChangeDetectionStrategy, Component, computed, input, output, signal} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormArray, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CoverageDef } from '../../../core/data/models/coverage-def.model';
+import { AmountType, CoverageForm, EditableRows, SelectionMode } from '../../../core/data/models/coverage-form.model';
 
-type AmountType = number | null;
 
-interface CoverageForm {
-  selected: FormControl<boolean>;
-  amount: FormControl<AmountType>;
-}
 
 @Component({
   selector: 'app-coverages-limits',
@@ -18,33 +14,54 @@ interface CoverageForm {
   styleUrls: ['./coverage-limits.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class CoveragesLimitsComponent {
   definitions = input.required<readonly CoverageDef[]>();
   visibleTierIdxs = input<readonly number[]>([0, 1, 2] as const);
   coveragesFA = input.required<FormArray<FormGroup<CoverageForm>>>();
   coverageToggled = output<{ index: number; selected: boolean }>();
   coveragesChanged = output<void>();
+  showCheckboxes = input<boolean>(true);
+  selectionMode = input<SelectionMode>('checkbox');
+  editableRows = input<EditableRows>([] as const);
+  enableEdgeEdit = input<boolean>(false);
+  private changeTick = signal(0);
+  private colOverrides = signal<(number | null)[]>([null, null, null]);
 
-  selectedToAdd = signal<string>('');
-  private changeTick = signal(0); 
 
-  readonly availableIdx = computed(() => {
-    const defs = this.definitions();
-    return defs.map((_, i) => i).filter((i) => !this.isSelected(i));
+  private isAlways(): boolean {
+    return this.selectionMode() === 'always';
+  }
+  showChecks(): boolean {
+    return this.showCheckboxes() && !this.isAlways();
+  }
+
+  private readonly editableSet = computed(() => {
+    const cfg = this.editableRows();
+    if (cfg === 'firstLast') {
+      const len = this.definitions().length;
+      return len ? new Set([0, Math.max(0, len - 1)]) : new Set<number>();
+    }
+    return new Set<number>(Array.isArray(cfg) ? cfg : []);
   });
 
-  readonly selectedIdx = computed(() => {
-    const defs = this.definitions();
-    this.changeTick();
-    return defs.map((_, i) => i).filter((i) => this.isSelected(i));
-  });
+  isRowEnabled(i: number): boolean {
+    return this.isAlways() ? true : this.isSelected(i);
+  }
+  isEditableByConfig(i: number): boolean {
+    return this.editableSet().has(i);
+  }
+
+  isEdgeEditable(i: number): boolean {
+    if (!this.enableEdgeEdit()) return false;
+    const len = this.definitions().length;
+    return len > 0 && (i === 0 || i === len - 1);
+  }
+
 
   private getDefinition(i: number): CoverageDef | null {
     const defs = this.definitions();
     return i >= 0 && i < defs.length ? defs[i] : null;
   }
-
   getGroup(i: number): FormGroup<CoverageForm> {
     const fa = this.coveragesFA();
     const fg = fa.at(i) as FormGroup<CoverageForm> | undefined;
@@ -53,65 +70,95 @@ export class CoveragesLimitsComponent {
   }
 
   isSelected(i: number): boolean {
+    if (this.isAlways()) return true;
     const fg = this.getGroup(i);
     return !!fg.controls.selected.value;
   }
-
-  trackByIndex(index: number): number {
-    return index;
-  }
+  trackByIndex(index: number): number { return index; }
 
   private emitChange(): void {
     this.coveragesChanged.emit();
-    this.changeTick.update((v) => v + 1);
+    this.changeTick.update(v => v + 1);
   }
 
-  onSelectToAdd(raw: string): void {
-    this.selectedToAdd.set(raw);
-    this.addSelected();
-    this.emitChange();
-  }
-
-  addSelected(): void {
-    const raw = this.selectedToAdd();
-    if (raw === '' || raw == null) return;
-
-    const i = Number(raw);
-    if (!Number.isFinite(i)) return;
-
-    const def = this.getDefinition(i);
-    if (!def) return;
-
+  getAmountsFA(i: number): FormArray<FormControl<AmountType>> | null {
     const fg = this.getGroup(i);
+    return (fg.controls['amounts'] as FormArray<FormControl<AmountType>> | undefined) ?? null;
+  }
+  getAmountCtrl(i: number, col: number): FormControl<AmountType> | null {
+    const fa = this.getAmountsFA(i);
+    return fa ? (fa.at(col) as FormControl<AmountType>) : null;
+  }
 
-    fg.controls.selected.setValue(true, { emitEvent: false });
 
-    if (def.kind === 'tier' && Array.isArray(def.tiers) && def.tiers.length) {
-      const first = Number(def.tiers[0]);
-      fg.controls.amount.setValue(Number.isFinite(first) ? first : null, {
-        emitEvent: false
-      });
-    } else if (def.kind === 'free') {
-      fg.controls.amount.setValue(null, { emitEvent: false });
+  getAmountValue(i: number, col: number): number | null {
+    const fa = this.getAmountsFA(i);
+    if (fa) {
+      const v = fa.at(col)?.value ?? null;
+      return (typeof v === 'number' && Number.isFinite(v)) ? v : null;
+    }
+    const def = this.getDefinition(i);
+    const t = (def?.tiers as number[] | undefined)?.[col];
+    return (typeof t === 'number' && Number.isFinite(t)) ? t : null;
+  }
+
+
+  getDisplayTier(i: number, ti: number, base: number | null): number | null {
+    const ov = this.colOverrides()[ti];
+    if (i > 0 && ov !== null && Number.isFinite(ov)) return ov;
+    return base;
+  }
+
+  setAmountValue(i: number, col: number, raw: any): void {
+    const v =
+      raw === null || raw === '' ? null :
+      (typeof raw === 'number' ? (Number.isFinite(raw) ? raw : null) :
+       (Number.isFinite(Number(raw)) ? Number(raw) : null));
+
+    let fa = this.getAmountsFA(i);
+    if (!fa) {
+      const fg = this.getGroup(i);
+      const a0 = new FormControl<AmountType>(this.getAmountValue(i, 0));
+      const a1 = new FormControl<AmountType>(this.getAmountValue(i, 1));
+      const a2 = new FormControl<AmountType>(this.getAmountValue(i, 2));
+      fg.addControl('amounts', new FormArray<FormControl<AmountType>>([a0, a1, a2]));
+      fa = this.getAmountsFA(i);
     }
 
-    this.coverageToggled.emit({ index: i, selected: true });
-    this.selectedToAdd.set('');
+
+    fa!.at(col).setValue(v);
+
+    if (i === 0) {
+      const next = [...this.colOverrides()];
+      next[col] = v; 
+      this.colOverrides.set(next);
+    }
+
     this.emitChange();
   }
 
-  removeSelected(i: number): void {
-    const def = this.getDefinition(i);
-    if (!def) return;
+  private readonly nf = new Intl.NumberFormat('en-US'); 
 
-    const fg = this.getGroup(i);
-    fg.controls.selected.setValue(false, { emitEvent: false });
-    fg.controls.amount.reset(null, { emitEvent: false });
-
-    this.coverageToggled.emit({ index: i, selected: false });
-    this.emitChange();
+  formatAmount(v: number | null): string {
+    return v == null ? '' : this.nf.format(v);
   }
 
+  private parseAmount(s: string): number | null {
+    const digits = (s ?? '').toString().replace(/[^\d]/g, '');
+    if (!digits) return null;
+    const n = Number(digits);
+    return Number.isFinite(n) ? n : null;
+  }
+
+ 
+  onAmountInput(i: number, col: number, ev: Event): void {
+    const el = ev.target as HTMLInputElement;
+    const num = this.parseAmount(el.value);
+    this.setAmountValue(i, col, num);      
+    el.value = this.formatAmount(num);     
+  }
+
+ 
   chooseTier(i: number, value: string | number): void {
     const v = Number(value);
     const fg = this.getGroup(i);
@@ -120,6 +167,7 @@ export class CoveragesLimitsComponent {
   }
 
   onToggle(i: number): void {
+    if (!this.showChecks() || this.isAlways()) return;
     const def = this.getDefinition(i);
     if (!def) return;
 

@@ -1,82 +1,106 @@
-
 .section-title {
   background: #e6e6e6;
-  color: #6d0f0f;              
+  color: #6d0f0f;
   font-weight: 700;
   padding: .4rem .75rem;
   border-radius: 4px;
 }
 
-/* “Tabla” con dos columnas */
 .table-like {
-  .thead {
-    display: grid;
-    grid-template-columns: 1fr auto; 
-    /* background: #cfcfcf; */
-    border-radius: 2px;
-  }
-
-  .th {
-    font-weight: 700;
-    color: #6d0f0f;
-    padding: .35rem .75rem;
-  }
-
-  .th-cob {
-    text-align: left;
-  }
-
-  .th-montos {
-    text-align: right;              /* Alinea el texto hacia las celdas */
-    padding-right: 2.5rem;          /* 🔹 Ajuste fino para alinear el header con los montos */
-  }
-
-  .tbody {
-    display: grid;
-    grid-auto-rows: auto;
-  }
-
-  .tr {
-    display: grid;
-    grid-template-columns: 1fr auto; /* Misma estructura que el encabezado */
-    align-items: center;
-    gap: .5rem 1rem;
-    padding: .35rem .5rem;
-  }
-
-  .td-cob {
-    padding-left: .25rem;
-  }
-
-  .td-montos {
-    display: flex;
-    justify-content: flex-end;
-  }
+  width: 100%;
 }
 
+.thead,
+.tbody {
+  display: block;
+}
 
-/* Grid de 3 celdas punteadas para montos */
+.thead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .75rem;
+  align-items: center;
+  padding: 0 .25rem .5rem .25rem;
+}
+
+.th {
+  font-weight: 700;
+}
+
+.th-cob {
+  color: #8b0000;
+  text-align: left;
+}
+
+.th-montos {
+  color: #8b0000;
+  text-align: right;
+  padding-right: 2.5rem;
+}
+
+.tbody > .tr {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .75rem;
+  align-items: center;
+  padding: .5rem .25rem;
+}
+
+.td-cob {
+  padding-left: .25rem;
+}
+
+.td-montos {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .montos-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, 120px); 
   gap: .35rem;
-  max-width: 520px;
 }
 
 .monto-celda {
-  padding: .45rem .75rem;
-  text-align: right;
-  border: 1px dotted #8b8b8b;   /* borde punteado como la imagen */
-  border-radius: 2px;
-  min-height: 38px;
-  display: flex;
+  box-sizing: border-box;
+  display: inline-flex;
   align-items: center;
   justify-content: flex-end;
+  height: 38px;                     
+  padding: .45rem .75rem;           
+  border: 1px dotted #8b8b8b;     
+  border-radius: 2px;
+  background: #fff;
   font-weight: 500;
+  line-height: 1;
 }
 
 .monto-celda.disabled {
-  opacity: .35;             
+  opacity: .35;
+}
+
+.monto-celda--editable {
+  padding: .45rem .75rem;
+}
+
+.monto-celda-input {
+  width: 100%;
+  border: 0;                       
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  text-align: right;
+  font: inherit;                   
+  line-height: inherit;
+  box-shadow: none;
+  appearance: textfield;
+}
+
+.monto-celda-input::-webkit-outer-spin-button,
+.monto-celda-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .free-input {
@@ -84,18 +108,18 @@
   align-items: center;
   gap: .35rem;
   max-width: 260px;
+}
 
-  .form-control {
-    height: 36px;
-    text-align: right;
-  }
+.free-input .form-control {
+  height: 36px;
+  text-align: right;
+}
 
-  .suffix {
-    font-weight: 600;
-    color: #555;
-    min-width: 48px;
-    text-align: left;
-  }
+.free-input .suffix {
+  font-weight: 600;
+  color: #555;
+  min-width: 48px;
+  text-align: left;
 }
 
 .form-check-input {
@@ -107,9 +131,11 @@
   .montos-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .table-like .tr {
     grid-template-columns: 1fr;
   }
+
   .td-montos {
     justify-content: flex-start;
   }

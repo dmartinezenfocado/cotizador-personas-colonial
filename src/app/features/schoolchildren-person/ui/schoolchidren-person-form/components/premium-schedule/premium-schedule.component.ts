@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-type PremiumRow = { label: string; values: number[] };      
-type PremiumSection = { title: string; rows: PremiumRow[] }; 
+type Rates = {
+  studentSchool: number;
+  professorSchool: number;
+  student24h: number;
+  professor24h: number;
+};
 
 @Component({
   selector: 'app-premium-schedule',
@@ -13,27 +17,18 @@ type PremiumSection = { title: string; rows: PremiumRow[] };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PremiumScheduleComponent {
-  @Input() columns: string[] = ['', '', ''];
-  @Input() sections: PremiumSection[] = [
-    {
-      title: 'Horario Escolar',
-      rows: [
-        { label: 'Prima por Estudiante', values: [117.80, 176.70, 235.60] },
-        { label: 'Prima por Profesor',   values: [331.23, 496.85, 662.47] },
-      ],
-    },
-    {
-      title: 'Horario 24 horas',
-      rows: [
-        { label: 'Prima por Estudiante', values: [130.20, 195.30, 260.40] },
-        { label: 'Prima por Profesor',   values: [366.10, 549.15, 732.20] },
-      ],
-    },
-  ];
+  columns = input<string[]>([]);
+  amountsStudent = input.required<readonly number[]>();
+  amountsProfessor = input<readonly number[] | null>(null);
+  rates = input.required<Rates>();
 
+  private readonly nf = new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   format(value: number | null | undefined): string {
-    if (value == null) return '';
-    return new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+    return value == null ? '' : this.nf.format(value);
+  }
+
+  calc(value: number | null | undefined, rate: number): number {
+    return Math.round(((Number(value) || 0) / 1000) * rate * 100) / 100;
   }
 }
